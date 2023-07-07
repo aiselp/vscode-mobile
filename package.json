@@ -1,5 +1,5 @@
 {
-  "name": "myApp",
+  "name": "vscode-mobile",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -9,9 +9,16 @@
     "preview": "vite preview",
     "test:e2e": "cypress run",
     "test:unit": "vitest",
+    "postinstall": "monaco-treemending",
     "lint": "eslint"
   },
   "dependencies": {
+    "@vueuse/core": "^10.2.0",
+    "eventemitter3": "^5.0.1",
+    "monaco-editor": "^0.39.0",
+    "vscode": "npm:@codingame/monaco-vscode-api@^1.79.8",
+
+    "@capacitor/android": "5.1.1",
     "@capacitor/app": "5.0.5",
     "@capacitor/core": "5.1.1",
     "@capacitor/haptics": "5.0.5",
@@ -24,6 +31,8 @@
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
+    "@types/vscode": "^1.79.1",
+    "ts-node": "^10.9.1",
     "@capacitor/cli": "5.1.1",
     "@vitejs/plugin-legacy": "^4.0.2",
     "@vitejs/plugin-vue": "^4.0.0",

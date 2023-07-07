@@ -17,5 +17,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom'
-  }
+  },
+  base: "",
+  assetsInclude: ['node_modules/vscode-oniguruma/**/*.wasm']
 })
