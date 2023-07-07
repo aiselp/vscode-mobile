@@ -13,7 +13,7 @@ import 'vscode/default-extensions/search-result'
 import { jsCode } from "./testdata";
 import './setup'
 import './features/filesystem'
-import './features/notifications'
+// import './features/notifications'
 import './features/customView'
 import './features/intellisense'
 

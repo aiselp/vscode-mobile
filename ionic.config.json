@@ -1,5 +1,5 @@
 {
-  "name": "myApp",
+  "name": "vscode-mobile",
   "integrations": {
     "capacitor": {}
   },

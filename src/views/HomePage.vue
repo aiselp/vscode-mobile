@@ -7,6 +7,7 @@
       </div>
     </ion-content>
   </ion-menu>
+  <bottom-log-page></bottom-log-page>
   <!-- ----------body-------------- -->
   <ion-page id="main-content">
     <ion-header :translucent="true">
@@ -14,7 +15,11 @@
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>vscode-api</ion-title>
+        <div style="display: flex;">
+          <ion-title>vscode-api</ion-title>
+          <ion-button id="open-log">open</ion-button>
+        </div>
+
       </ion-toolbar>
     </ion-header>
 
@@ -31,15 +36,16 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonMenu } from '@ionic/vue';
+import BottomLogPage from './BottomLogPage.vue'
+import { IonContent, IonButton, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonMenu } from '@ionic/vue';
 import { ref, onMounted } from 'vue'
-import { renderEditorPart, renderSidebarPart, renderActivitybarPar, renderPanelPart } from '../core/setup'
+import { renderEditorPart, renderSidebarPart, renderActivitybarPar } from '../core/setup'
 
 const sidebar = ref<HTMLElement>()
 const activityBar = ref<HTMLElement>()
 const editors = ref<HTMLElement>()
 const panel = ref<HTMLElement>()
-onMounted(() => {
+onMounted(async () => {
   renderEditorPart(editors.value!!)
   renderSidebarPart(sidebar.value!!)
   renderActivitybarPar(activityBar.value!!)
@@ -50,7 +56,7 @@ onMounted(() => {
 <style scoped>
 #container {
   width: 100%;
-  height: 80%;
+  height: 90%;
   position: absolute;
   left: 0;
   right: 0;

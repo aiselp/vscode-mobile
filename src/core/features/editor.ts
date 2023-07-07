@@ -7,6 +7,8 @@ let currentEditor: ({
   editor: monaco.editor.IStandaloneCodeEditor
 } & monaco.IDisposable) | null = null
 export const openNewCodeEditor: OpenEditor = async (modelRef) => {
+  console.log("open new code editor");
+
   if (currentEditor != null) {
     currentEditor.dispose()
     currentEditor = null
