@@ -18,13 +18,13 @@ class FakeFileSystem extends SimpleTextFileSystemProvider {
     override async delete(): Promise<void> {
     }
 
-    override async readdir(directory: monaco.Uri): Promise<[string, FileType][]> {
+    override async readdir(): Promise<[string, FileType][]> {
+        const directory = arguments[0] as monaco.Uri
         if (directory.path === '/tmp') {
             return [['test2.js', FileType.File]]
         }
         return []
     }
 }
-console.log("register file");
 
 registerFileSystemOverlay(new FakeFileSystem())
