@@ -29,8 +29,10 @@
           <ion-title size="large">Blank</ion-title>
         </ion-toolbar>
       </ion-header>
-
-      <div ref="editors" id="container"></div>
+      <div id="container">
+        <div ref="editors" style="flex-grow: 1;"></div>
+        <div ref="statusBar"></div>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -39,16 +41,18 @@
 import BottomLogPage from './BottomLogPage.vue'
 import { IonContent, IonButton, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonMenu } from '@ionic/vue';
 import { ref, onMounted } from 'vue'
-import { renderEditorPart, renderSidebarPart, renderActivitybarPar } from '../core/setup'
+import { renderEditorPart, renderSidebarPart, renderActivitybarPar, renderStatusBarPart } from '../core/setup'
 
 const sidebar = ref<HTMLElement>()
 const activityBar = ref<HTMLElement>()
 const editors = ref<HTMLElement>()
 const panel = ref<HTMLElement>()
+const statusBar = ref<HTMLElement>()
 onMounted(async () => {
   renderEditorPart(editors.value!!)
   renderSidebarPart(sidebar.value!!)
   renderActivitybarPar(activityBar.value!!)
+  renderStatusBarPart(statusBar.value!!)
 })
 
 </script>
@@ -56,10 +60,10 @@ onMounted(async () => {
 <style scoped>
 #container {
   width: 100%;
-  height: 90%;
-  position: absolute;
-  left: 0;
-  right: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
 }
 
 #sidebar {

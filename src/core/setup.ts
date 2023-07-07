@@ -60,7 +60,7 @@ await initializeMonacoService({
     ...getModelServiceOverride(),
     ...getNotificationServiceOverride(),
     ...getDialogsServiceOverride(),
-    ...getConfigurationServiceOverride(monaco.Uri.file('/tmp')),
+    ...getConfigurationServiceOverride(monaco.Uri.file('/')),
     ...getKeybindingsServiceOverride(),
     ...getTextmateServiceOverride(),
     ...getThemeServiceOverride(),
