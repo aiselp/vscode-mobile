@@ -1,6 +1,7 @@
 import EventEmitter from "eventemitter3";
 import { createConfiguredEditor, createModelReference } from 'vscode/monaco'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
+import * as vscode from 'vscode'
 import 'monaco-editor/esm/vs/editor/editor.all.js'
 
 import 'vscode/default-extensions/theme-defaults'
@@ -22,7 +23,7 @@ import './features/intellisense'
 const ee = new EventEmitter();
 const isDev = import.meta.env.DEV;
 
-let globalApp: monaco.editor.IStandaloneCodeEditor | null = null;
+// vscode.workspace.updateWorkspaceFolders()
 
 function init(dom: HTMLElement) {
   // globalApp = createConfiguredEditor(dom, {

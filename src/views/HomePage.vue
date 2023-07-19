@@ -1,6 +1,7 @@
 <template>
-  <ion-menu contentId="main-content">
+  <ion-menu type="reveal" contentId="main-content">
     <ion-content>
+      <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items" />
       <div style="display: flex;height: 100%;width: 100%;">
         <div ref="activityBar" style="display: none;"></div>
         <div id="sidebar" style="width: 100%;height: 100%;" ref="sidebar"></div>
@@ -10,26 +11,9 @@
   <bottom-log-page></bottom-log-page>
   <!-- ----------body-------------- -->
   <ion-page id="main-content">
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <div style="display: flex;">
-          <ion-title>vscode-api</ion-title>
-          <ion-button id="open-log">open</ion-button>
-        </div>
-
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
       <div id="container">
+        <TopToolbar></TopToolbar>
         <div ref="editors" style="flex-grow: 1;"></div>
         <div ref="statusBar"></div>
       </div>
@@ -39,9 +23,37 @@
 
 <script setup lang="ts">
 import BottomLogPage from './BottomLogPage.vue'
-import { IonContent, IonButton, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonMenu } from '@ionic/vue';
-import { ref, onMounted } from 'vue'
+import TopToolbar from './TopToolbar.vue'
+import { IonContent, IonIcon, IonPage, IonMenu } from '@ionic/vue';
+import { ref, onMounted, h, watch } from 'vue'
+import { folder, search, settings } from 'ionicons/icons';
 import { renderEditorPart, renderSidebarPart, renderActivitybarPar, renderStatusBarPart } from '../core/setup'
+import { MenuProps } from 'ant-design-vue';
+
+const current = ref<string[]>(['file']);
+watch(current, (value) => {
+  console.log(value);
+})
+const items = ref<MenuProps['items']>([
+  {
+    key: 'file',
+    icon: () => h(IonIcon, { icon: folder }),
+    label: '文件',
+    title: '文件',
+  },
+  {
+    key: 'search',
+    icon: () => h(IonIcon, { icon: search }),
+    label: '搜索',
+    title: '搜索',
+  },
+  {
+    key: 'settings',
+    icon: () => h(IonIcon, { icon: settings }),
+    label: '设置',
+    title: '设置',
+  },
+]);
 
 const sidebar = ref<HTMLElement>()
 const activityBar = ref<HTMLElement>()
