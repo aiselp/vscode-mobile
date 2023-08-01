@@ -37,3 +37,28 @@ export async function commentLine() {
 export async function formatDocument() {
     await vscode.commands.executeCommand('editor.action.formatDocument');
 }
+export async function openSearch() {
+    await vscode.commands.executeCommand('workbench.view.search');
+}
+export async function openExplorer() {
+    await vscode.commands.executeCommand('workbench.view.explorer');
+}
+
+export async function insertText(text: string) {
+    const editor = vscode.window.activeTextEditor;
+    await editor?.insertSnippet(new vscode.SnippetString(text));
+    // vscode.commands.executeCommand('editor.action.triggerSuggest');
+}
+
+export async function moveCursorByOffset(lineOffset: number = 0, characterOffset: number = 0) {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+        // 获取当前光标位置
+        const currentPosition = editor.selection.active;
+        // 计算新的位置
+        const newPosition = currentPosition.translate(lineOffset, characterOffset);
+        // 移动光标到新的位置
+        editor.selection = new vscode.Selection(newPosition, newPosition);
+        await editor?.insertSnippet(new vscode.SnippetString());
+    }
+}

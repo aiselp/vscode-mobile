@@ -1,5 +1,5 @@
 <template>
-    <div style="display: flex;justify-content: center;">
+    <div v-show="enableTopToolbar" style="display: flex;justify-content: center;">
         <a-dropdown>
             <a-button :size="size" class="dbutton" :icon="h(IonIcon, { icon: pencil })">
                 <span>编辑</span></a-button>
@@ -27,6 +27,7 @@
 import { IonIcon } from '@ionic/vue';
 import { ref, onMounted, h } from 'vue'
 import { save, arrowUndo, arrowRedo, play, pencil } from 'ionicons/icons';
+import { enableBottomShortcuts, enableTopToolbar } from '../core/appConfigs'
 import type { SizeType } from 'ant-design-vue/es/config-provider';
 import { save as saveFile, undo, redo, gotoline, find, commentLine, formatDocument } from '../core/shortcutFunctions'
 import type { MenuProps } from 'ant-design-vue';
