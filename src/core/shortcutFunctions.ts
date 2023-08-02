@@ -59,6 +59,17 @@ export async function moveCursorByOffset(lineOffset: number = 0, characterOffset
         const newPosition = currentPosition.translate(lineOffset, characterOffset);
         // 移动光标到新的位置
         editor.selection = new vscode.Selection(newPosition, newPosition);
-        await editor?.insertSnippet(new vscode.SnippetString());
     }
+}
+
+export async function selection() {
+    await vscode.commands.executeCommand('editor.action.smartSelect.expand');
+}
+export async function copySelection() {
+    await vscode.commands.executeCommand('editor.action.clipboardCopyAction');
+    const toast = await toastController.create({
+        message: '复制成功！',
+        duration: 1500,
+    });
+    await toast.present();
 }

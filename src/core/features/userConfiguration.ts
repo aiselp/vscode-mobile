@@ -7,7 +7,7 @@ const defaultConfiguration: string = JSON.stringify({
     "editor.minimap.enabled": false,
     "editor.scrollbar.horizontalScrollbarSize": 6,
     "editor.scrollbar.verticalScrollbarSize": 6,
-    "files.autoSave": "onFocusChange"
+    "files.autoSave": "off"
 }, undefined, 2)
 const userConfiguration = useStorage('userConfiguration', defaultConfiguration)
 
