@@ -1,12 +1,13 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import Antd from 'ant-design-vue';
 
 import { IonicVue } from '@ionic/vue';
 
+import 'ant-design-vue/dist/reset.css';
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
-
 /* Basic CSS for apps built with Ionic */
 import '@ionic/vue/css/normalize.css';
 import '@ionic/vue/css/structure.css';
@@ -25,9 +26,11 @@ import './theme/variables.css';
 
 import './core/app'
 
+
 const app = createApp(App)
   .use(IonicVue)
-  .use(router);
+  .use(router)
+  .use(Antd)
 
 router.isReady().then(() => {
   app.mount('#app');

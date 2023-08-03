@@ -1,48 +1,39 @@
 <template>
-  <ion-menu contentId="main-content">
-    <ion-content>
-      <div style="display: flex;height: 100%;width: 100%;">
-        <div ref="activityBar" style="display: none;"></div>
-        <div id="sidebar" style="width: 100%;height: 100%;" ref="sidebar"></div>
-      </div>
-    </ion-content>
-  </ion-menu>
-  <!-- ----------body-------------- -->
-  <ion-page id="main-content">
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <ion-title>vscode-api</ion-title>
-      </ion-toolbar>
-    </ion-header>
+  <ion-split-pane content-id="main-content">
+    <ion-menu type="reveal" contentId="main-content">
+      <MenuPage></MenuPage>
+    </ion-menu>
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div ref="editors" id="container"></div>
-    </ion-content>
-  </ion-page>
+    <!-- ----------body-------------- -->
+    <div class="ion-page" style="width: 100%;" id="main-content">
+      <ion-content :fullscreen="true">
+        <div id="container">
+          <TopToolbar></TopToolbar>
+          <div ref="editors" style="flex-grow: 1;"></div>
+          <div ref="statusBar"></div>
+        </div>
+      </ion-content>
+    </div>
+  </ion-split-pane>
+  <BottomShortcuts></BottomShortcuts>
+  <bottom-log-page></bottom-log-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenuButton, IonMenu } from '@ionic/vue';
+import BottomLogPage from './BottomLogPage.vue'
+import TopToolbar from './TopToolbar.vue'
+import MenuPage from './MenuPage.vue';
+import BottomShortcuts from './BottomShortcuts.vue'
+import { IonContent, IonSplitPane, IonMenu } from '@ionic/vue';
 import { ref, onMounted } from 'vue'
-import { renderEditorPart, renderSidebarPart, renderActivitybarPar, renderPanelPart } from '../core/setup'
+import { renderEditorPart, renderStatusBarPart } from '../core/setup'
 
-const sidebar = ref<HTMLElement>()
-const activityBar = ref<HTMLElement>()
 const editors = ref<HTMLElement>()
 const panel = ref<HTMLElement>()
+const statusBar = ref<HTMLElement>()
 onMounted(() => {
   renderEditorPart(editors.value!!)
-  renderSidebarPart(sidebar.value!!)
-  renderActivitybarPar(activityBar.value!!)
+  renderStatusBarPart(statusBar.value!!)
 })
 
 </script>
@@ -50,13 +41,23 @@ onMounted(() => {
 <style scoped>
 #container {
   width: 100%;
-  height: 80%;
-  position: absolute;
-  left: 0;
-  right: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
 }
 
 #sidebar {
   text-align: left;
+}
+</style>
+<style>
+.monaco-icon-label::before {
+  width: 22px;
+}
+
+.monaco-tl-twistie {
+  transform: translateX(6px);
+  margin-right: 7px;
 }
 </style>
