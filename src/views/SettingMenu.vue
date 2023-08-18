@@ -1,5 +1,9 @@
 <template >
     <div class="content">
+
+        <a-card>
+            <a-button @click="openSettings" type="primary" block>打开编辑器设置</a-button>
+        </a-card>
         <IonList>
             <IonItem class="item">
                 <IonText>主题</IonText>
@@ -18,6 +22,7 @@
 <script setup lang="ts">
 import { enableBottomShortcuts, enableTopToolbar } from '../core/appConfigs'
 import { IonItem, IonLabel, IonList, IonInput, IonText, IonToggle } from '@ionic/vue';
+import { openSettings } from '../core/shortcutFunctions'
 
 </script>
 <style scoped>

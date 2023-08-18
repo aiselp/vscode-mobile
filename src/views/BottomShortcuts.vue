@@ -7,7 +7,8 @@
                 <a-button class="button" type="text" @click="moveCursorByOffset(-1, 0)"
                     :icon="h(IonIcon, { icon: chevronUp })"></a-button>
                 <a-button class="button" type="text" @click="copySelection" :icon="h(IonIcon, { icon: copy })"></a-button>
-                <a-button class="button" type="text" :icon="h(IonIcon, { icon: newspaper })" @click.stop></a-button>
+                <a-button class="button" type="text" @click="inputText('\t')"
+                    :icon="h(IonIcon, { icon: swapHorizontal })"></a-button>
                 <a-button class="button" type="text" @click="moveCursorByOffset(0, -1)"
                     :icon="h(IonIcon, { icon: chevronBack })"></a-button>
                 <a-button class="button" type="text" @click="moveCursorByOffset(1, 0)"
@@ -26,13 +27,12 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, h } from "vue"
-import { crop, chevronBack, chevronForward, chevronDown, newspaper, chevronUp, copy, logoNodejs } from 'ionicons/icons';
+import { crop, chevronBack, chevronForward, chevronDown, newspaper, chevronUp, copy, logoNodejs, swapHorizontal } from 'ionicons/icons';
 import { IonIcon } from '@ionic/vue';
 import { enableBottomShortcuts, symbols } from '../core/appConfigs'
-import { insertText, moveCursorByOffset, selection, copySelection } from '../core/shortcutFunctions'
-import { useKeyboardStatus } from '../core/use_status/native'
+import { moveCursorByOffset, selection, copySelection } from '../core/shortcutFunctions'
+import { keyboard as keyboardStatus } from '../core/native/native_status'
 
-const keyboardStatus = useKeyboardStatus()
 const currentInputBox = ref<HTMLElement>()
 
 const show = computed<boolean>(() => {
@@ -42,6 +42,8 @@ const show = computed<boolean>(() => {
     return enableBottomShortcuts.value && keyboardStatus.value
 })
 function updateInputBox() {
+    console.log(document.activeElement);
+
     currentInputBox.value = document.activeElement as HTMLElement
 }
 function resetFocus() {
@@ -57,14 +59,6 @@ function inputText(str: string) {
 }
 function test(t: string) {
     console.log(t);
-
-    const inputEvent = new Event('input', {
-        bubbles: true,
-        cancelable: true,
-    });
-    (currentInputBox.value as HTMLIonTextareaElement).value += 'f\n'
-    currentInputBox.value?.dispatchEvent(inputEvent)
-
 }
 </script>
 <style scoped>
@@ -86,4 +80,4 @@ function test(t: string) {
     height: 40px;
     /* font-size: small; */
 }
-</style>
+</style>../core/use_status/native_status../core/native/native_status

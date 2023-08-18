@@ -1,6 +1,7 @@
 import * as vscode from 'vscode'
 import { IonButton, toastController } from '@ionic/vue';
-
+import { rootPath } from './appConfigs'
+import { Modal } from 'ant-design-vue';
 
 export async function save() {
     await vscode.window.activeTextEditor?.document.save()
@@ -15,12 +16,6 @@ export async function undo() {
 }
 export async function redo() {
     await vscode.commands.executeCommand('redo');
-    const commands = vscode.commands.getCommands();
-    commands.then((allCommands: string[]) => {
-        allCommands.forEach((command) => {
-            console.log(command);
-        });
-    });
 }
 export async function gotoline() {
     await vscode.commands.executeCommand('workbench.action.gotoLine');
@@ -72,4 +67,14 @@ export async function copySelection() {
         duration: 1500,
     });
     await toast.present();
+}
+export async function openSettings() {
+    await vscode.commands.executeCommand('workbench.action.openSettings');
+}
+export async function openNewFolder(uri: string | vscode.Uri) {
+    await vscode.commands.executeCommand('workbench.action.closeAllEditors')
+    vscode.workspace.updateWorkspaceFolders(0, vscode.workspace.workspaceFolders?.length, {
+        uri: vscode.Uri.parse(uri.toString()),
+    })
+    rootPath.value = uri.toString();
 }

@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.aiselp.app.vscode;
 
 import com.getcapacitor.BridgeActivity;
 
