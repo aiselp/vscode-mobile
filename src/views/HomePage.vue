@@ -1,6 +1,7 @@
 <template>
   <ion-split-pane content-id="main-content">
-    <ion-menu type="reveal" contentId="main-content">
+    <ion-menu menu-id="main-menu" @ionDidOpen="meunSate = true" @ionDidClose="meunSate = false" type="reveal"
+      contentId="main-content">
       <MenuPage></MenuPage>
     </ion-menu>
 
@@ -24,9 +25,10 @@ import BottomLogPage from './BottomLogPage.vue'
 import TopToolbar from './TopToolbar.vue'
 import MenuPage from './MenuPage.vue';
 import BottomShortcuts from './BottomShortcuts.vue'
-import { IonContent, IonSplitPane, IonMenu } from '@ionic/vue';
-import { ref, onMounted } from 'vue'
+import { IonContent, IonSplitPane, IonMenu, menuController } from '@ionic/vue';
+import { ref, onMounted, watch } from 'vue'
 import { renderEditorPart, renderStatusBarPart } from '../core/setup'
+import { meunSate } from '../core/appConfigs'
 
 const editors = ref<HTMLElement>()
 const panel = ref<HTMLElement>()
@@ -34,6 +36,12 @@ const statusBar = ref<HTMLElement>()
 onMounted(() => {
   renderEditorPart(editors.value!!)
   renderStatusBarPart(statusBar.value!!)
+  //监听菜单状态
+  watch(meunSate, async (v) => {
+    if (v) {
+      await menuController.open('main-menu')
+    } else await menuController.close('main-menu')
+  })
 })
 
 </script>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">vscode</string>
+    <string name="app_name">vscode-mobile</string>
     <string name="title_activity_main">vscode</string>
     <string name="package_name">com.aiselp.app.vscode</string>
     <string name="custom_url_scheme">io.ionic.starter</string>

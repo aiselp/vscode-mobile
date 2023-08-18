@@ -26,13 +26,11 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
         this.onDidChangeFile = onDidChangeFile.event
     }
     watch(resource: monaco.Uri, opts: IWatchOptions): IDisposable {
-        console.log('watch', resource.path);
         return {
             dispose: () => { }
         }
     }
     async stat(resource: monaco.Uri): Promise<IStat> {
-        console.log('stat:', resource.path);
         try {
             const stat = await Filesystem.stat({
                 path: resource.path,
@@ -50,7 +48,6 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
         }
     }
     async mkdir(resource: monaco.Uri): Promise<void> {
-        console.log('mkdir:', resource.path);
         try {
             await Filesystem.mkdir({
                 path: resource.path,
@@ -96,7 +93,6 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
     }
 
     async readFile(resource: monaco.Uri): Promise<Uint8Array> {
-        console.log('readFile:', resource.fsPath);
         try {
             const stat = await Filesystem.stat({ path: resource.path, directory })
             if (stat.size > 1024 * 1024 * 5) {
@@ -123,7 +119,6 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
     }
 
     async readdir(dir: monaco.Uri): Promise<[string, FileType][]> {
-        console.log('readdir:', dir.fsPath);
         try {
             const { files } = await Filesystem.readdir({
                 path: dir.fsPath,
@@ -140,4 +135,4 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
     }
 }
 
-registerFileSystemOverlay(new FakeFileSystem())
+export default FakeFileSystem

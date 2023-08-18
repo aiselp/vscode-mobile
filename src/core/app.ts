@@ -15,27 +15,58 @@ import { jsCode } from "./testdata";
 import './setup'
 import './features/userConfiguration'
 import './features/filesystem'
-// import './features/notifications'
 import './features/customView'
 import './features/intellisense'
+import './native'
 
+import {
+  updateUserConfiguration, configurationRegistry, getUserConfiguration
+} from 'vscode/service-override/configuration'
+import { Modal } from 'ant-design-vue';
+import { createVNode, watch } from 'vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+
+import { meunSate, rootPath } from './appConfigs'
+import { openNewFolder } from './shortcutFunctions'
+import { keyboard } from './native/native_status'
 // const modelRef = await createModelReference(monaco.Uri.file('/tmp/test.js'), jsCode)
 const ee = new EventEmitter();
 const isDev = import.meta.env.DEV;
 
-// vscode.workspace.updateWorkspaceFolders()
+vscode.window.onDidChangeActiveTextEditor(() => {
+  meunSate.value = false
+})
+watch(keyboard, (open) => {
+  const e = document.activeElement
+  if (!open && e?.classList.contains('monaco-mouse-cursor-text') && (e.tagName == 'textarea'.toLocaleUpperCase())) {
+    (e as HTMLElement).blur()
+  }
+})
+//初始化工作区目录
+openNewFolder(rootPath.value)
 
 function init(dom: HTMLElement) {
-  // globalApp = createConfiguredEditor(dom, {
-  //   model: modelRef.object.textEditorModel
-  // })
-  //   if (isDev) {
-
-  //}
-
   ee.emit("ready");
 }
-
+export async function closeApp() {
+  const isChange = vscode.workspace.textDocuments.some(document => document.isDirty);
+  if (isChange) {
+    await new Promise((resolve, reject) => {
+      Modal.confirm({
+        title: '提示',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: '存在未保存文件，是否退出？',
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk: resolve,
+        onCancel: async () => {
+          reject(new Error('cancelled'))
+        }
+      });
+    })
+  }
+}
 
 export default ee;
 export { init };

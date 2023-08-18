@@ -6,3 +6,6 @@ export const enableTopToolbar = useStorage<boolean>('app.enableTopToolbar', true
 export const enableBottomShortcuts = useStorage<boolean>('app.enableBottomShortcuts', true)
 
 export const symbols = useStorage('app.symbols', defaultSymbols)
+
+export const meunSate = ref<boolean>(false)
+export const rootPath = useStorage<string>('app.rootPath', '/')
