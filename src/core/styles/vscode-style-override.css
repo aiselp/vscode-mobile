@@ -1,0 +1,12 @@
+.monaco-dialog-box {
+    min-width: 220px;
+}
+
+.monaco-icon-label::before {
+    width: 22px;
+}
+
+.monaco-tl-twistie {
+    transform: translateX(6px);
+    margin-right: 7px;
+}

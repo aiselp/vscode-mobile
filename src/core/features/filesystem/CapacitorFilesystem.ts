@@ -1,14 +1,14 @@
 import {
     IFileSystemProviderWithFileReadWriteCapability,
-    FileSystemProviderCapabilities, registerFileSystemOverlay,
+    FileSystemProviderCapabilities,
     FileType, IFileChange, IStat, IFileOverwriteOptions, IFileWriteOptions,
     IWatchOptions, FileSystemProviderError, FileSystemProviderErrorCode
 } from 'vscode/service-override/files'
 import * as vscode from 'vscode'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
+import { Filesystem, Directory } from '@capacitor/filesystem'
 import { Base64 } from 'js-base64';
-import { E as Event, a as IDisposable, C } from 'vscode/dist/event';
+import { E as Event, a as IDisposable } from 'vscode/dist/event';
 
 const directory = Directory.ExternalStorage
 

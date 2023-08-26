@@ -59,13 +59,3 @@ onMounted(() => {
   text-align: left;
 }
 </style>
-<style>
-.monaco-icon-label::before {
-  width: 22px;
-}
-
-.monaco-tl-twistie {
-  transform: translateX(6px);
-  margin-right: 7px;
-}
-</style>

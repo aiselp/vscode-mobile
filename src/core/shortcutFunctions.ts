@@ -3,13 +3,16 @@ import { IonButton, toastController } from '@ionic/vue';
 import { rootPath } from './appConfigs'
 import { Modal } from 'ant-design-vue';
 
+export async function execCommand(command: string) {
+    await vscode.commands.executeCommand(command);
+}
 export async function save() {
     await vscode.window.activeTextEditor?.document.save()
-    const toast = await toastController.create({
-        message: '保存成功！',
-        duration: 1500,
-    });
-    await toast.present();
+    // const toast = await toastController.create({
+    //     message: '保存成功！',
+    //     duration: 1500,
+    // });
+    // await toast.present();
 }
 export async function undo() {
     await vscode.commands.executeCommand('undo');

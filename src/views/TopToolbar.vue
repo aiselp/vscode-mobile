@@ -45,14 +45,17 @@ import { ref, onMounted, h } from 'vue'
 import { save, arrowUndo, arrowRedo, play, pencil, document } from 'ionicons/icons';
 import { enableBottomShortcuts, enableTopToolbar, rootPath } from '../core/appConfigs'
 import type { SizeType } from 'ant-design-vue/es/config-provider';
-import { save as saveFile, undo, redo, gotoline, find, commentLine, formatDocument, openNewFolder } from '../core/shortcutFunctions'
+import {
+    save as saveFile, undo, redo, gotoline, execCommand,
+    find, commentLine, formatDocument, openNewFolder
+} from '../core/shortcutFunctions'
 import type { MenuProps } from 'ant-design-vue';
 import * as vscode from 'vscode'
 import { Modal } from 'ant-design-vue';
 import { createVNode, watch } from 'vue';
 import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 
-
+const foldAll = ref<boolean>(false)
 const filel = ref<boolean>(false)
 const path = ref<string>(rootPath.value)
 const size = ref<SizeType>("middle");
@@ -66,7 +69,8 @@ const onEditMenuClick: MenuProps['onClick'] = async ({ key }) => {
             await gotoline()
             break;
         case 2:
-
+            foldAll.value = !foldAll.value;
+            foldAll.value ? execCommand('editor.foldAll') : execCommand('editor.unfoldAll')
             break;
         case 3:
             await commentLine()
@@ -91,20 +95,7 @@ function openFolder() {
     openNewFolder(path.value)
 }
 function openFile() {
-    Modal.confirm({
-        title: '提示',
-        icon: createVNode(ExclamationCircleOutlined),
-        content: '存在未保存文件，是否退出？',
-        okText: 'Yes',
-        okType: 'danger',
-        cancelText: 'No',
-        onOk: () => {
 
-        },
-        onCancel: () => {
-
-        }
-    });
 }
 </script>
 <style scoped>
