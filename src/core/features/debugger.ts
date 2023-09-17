@@ -1,7 +1,5 @@
-import { onExtHostInitialized, registerExtension } from 'vscode/extensions'
-import * as vscode from 'vscode'
-
-await new Promise<void>(resolve => onExtHostInitialized(resolve))
+import { ExtensionHostKind, registerExtension } from 'vscode/extensions'
+import type * as vscode from 'vscode'
 
 const debuggerExtension = {
   name: 'debugger',
@@ -22,10 +20,11 @@ const debuggerExtension = {
   }
 }
 
-const { api: debuggerVscodeApi } = registerExtension(debuggerExtension)
+const { getApi } = registerExtension(debuggerExtension, ExtensionHostKind.LocalProcess)
 
+const debuggerVscodeApi = await getApi()
 class WebsocketDebugAdapter implements vscode.DebugAdapter {
-  constructor (private websocket: WebSocket) {
+  constructor(private websocket: WebSocket) {
     websocket.onmessage = (message) => {
       this._onDidSendMessage.fire(JSON.parse(message.data))
     }
@@ -34,17 +33,17 @@ class WebsocketDebugAdapter implements vscode.DebugAdapter {
   _onDidSendMessage = new debuggerVscodeApi.EventEmitter<vscode.DebugProtocolMessage>()
   onDidSendMessage = this._onDidSendMessage.event
 
-  handleMessage (message: vscode.DebugProtocolMessage): void {
+  handleMessage(message: vscode.DebugProtocolMessage): void {
     this.websocket.send(JSON.stringify(message))
   }
 
-  dispose () {
+  dispose() {
     this.websocket.close()
   }
 }
 
 debuggerVscodeApi.debug.registerDebugAdapterDescriptorFactory('javascript', {
-  async createDebugAdapterDescriptor () {
+  async createDebugAdapterDescriptor() {
     const websocket = new WebSocket('ws://localhost:5555')
 
     await new Promise((resolve, reject) => {
@@ -55,7 +54,7 @@ debuggerVscodeApi.debug.registerDebugAdapterDescriptorFactory('javascript', {
     websocket.send(JSON.stringify({
       main: '/tmp/test.js',
       files: {
-        '/tmp/test.js': new TextDecoder().decode(await vscode.workspace.fs.readFile(vscode.Uri.file('/tmp/test.js')))
+        '/tmp/test.js': new TextDecoder().decode(await debuggerVscodeApi.workspace.fs.readFile(debuggerVscodeApi.Uri.file('/tmp/test.js')))
       }
     }))
 

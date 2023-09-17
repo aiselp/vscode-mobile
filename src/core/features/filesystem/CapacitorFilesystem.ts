@@ -8,7 +8,8 @@ import * as vscode from 'vscode'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
 import { Filesystem, Directory } from '@capacitor/filesystem'
 import { Base64 } from 'js-base64';
-import { E as Event, a as IDisposable } from 'vscode/dist/event';
+import { Emitter, Event } from 'vscode/dist/vscode/vs/base/common/event.js';
+
 
 const directory = Directory.ExternalStorage
 
@@ -25,7 +26,7 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
         const onDidChangeFile = new vscode.EventEmitter<IFileChange[]>()
         this.onDidChangeFile = onDidChangeFile.event
     }
-    watch(resource: monaco.Uri, opts: IWatchOptions): IDisposable {
+    watch(resource: monaco.Uri, opts: IWatchOptions) {
         return {
             dispose: () => { }
         }
