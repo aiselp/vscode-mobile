@@ -54,14 +54,14 @@ openNewFolder(rootPath.value)
 function init(dom: HTMLElement) {
   ee.emit("ready");
 }
-export async function closeApp() {
+export async function checkDocument(message: string) {
   const isChange = vscode.workspace.textDocuments.some(document => document.isDirty);
   if (isChange) {
     await new Promise((resolve, reject) => {
       Modal.confirm({
         title: '提示',
         icon: createVNode(ExclamationCircleOutlined),
-        content: '存在未保存文件，是否退出？',
+        content: message,
         okText: 'Yes',
         okType: 'danger',
         cancelText: 'No',

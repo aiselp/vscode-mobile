@@ -10,3 +10,7 @@
     transform: translateX(6px);
     margin-right: 7px;
 }
+
+.line-numbers {
+    font-size: small;
+}

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode'
 import { IonButton, toastController } from '@ionic/vue';
+import { checkDocument } from './app'
 import { rootPath } from './appConfigs'
 import { Modal } from 'ant-design-vue';
 
@@ -75,9 +76,13 @@ export async function openSettings() {
     await vscode.commands.executeCommand('workbench.action.openSettings');
 }
 export async function openNewFolder(uri: string | vscode.Uri) {
+    await checkDocument("存在未保存文件，是否继续")
     await vscode.commands.executeCommand('workbench.action.closeAllEditors')
     vscode.workspace.updateWorkspaceFolders(0, vscode.workspace.workspaceFolders?.length, {
         uri: vscode.Uri.parse(uri.toString()),
     })
     rootPath.value = uri.toString();
+}
+export async function openNewFile(uri: string | vscode.Uri) {
+    vscode.window.showTextDocument(vscode.Uri.parse(uri.toString()))
 }
