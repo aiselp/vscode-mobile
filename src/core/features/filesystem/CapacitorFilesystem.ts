@@ -124,7 +124,7 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
                 path: dir.fsPath,
                 directory
             })
-            console.log(files.map(file => file.name));
+            // console.log(files.map(file => file.name));
             return files.map(file => {
                 const type = file.type === 'directory' ? FileType.Directory : FileType.File
                 return [file.name, type]
