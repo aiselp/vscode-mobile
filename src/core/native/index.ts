@@ -7,7 +7,9 @@ useBackButton(0, async (processNextHandler) => {
     console.log('Handler was called!');
     try {
         await checkDocument('存在未保存文件，是否退出？')
-        App.exitApp();
+        setTimeout(() => {
+            App.exitApp();
+        }, 20)
     } catch {
         processNextHandler()
     }

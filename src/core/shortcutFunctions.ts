@@ -46,7 +46,7 @@ export async function openExplorer() {
 export async function insertText(text: string) {
     const editor = vscode.window.activeTextEditor;
     await editor?.insertSnippet(new vscode.SnippetString(text));
-    // vscode.commands.executeCommand('editor.action.triggerSuggest');
+    // vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', vscode.window.activeTextEditor.uri);
 }
 
 export async function moveCursorByOffset(lineOffset: number = 0, characterOffset: number = 0) {
