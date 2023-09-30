@@ -17,9 +17,9 @@ import { ref, computed, watch } from 'vue'
 import * as vscode from 'vscode'
 import defaultFileSystem from '../core/features/filesystem'
 import type { TreeProps } from 'ant-design-vue';
-import { FileType } from 'vscode/service-override/files'
 import { message } from 'ant-design-vue';
 import { openNewFolder, openNewFile } from '../core/shortcutFunctions'
+import { FileType } from 'vscode';
 
 const props = defineProps<{
     isOpen: boolean,
@@ -29,14 +29,14 @@ const emit = defineEmits<{
     (e: 'update:isOpen', value: boolean): void
 }>()
 const [messageApi, contextHolder] = message.useMessage();
-const filesystem = defaultFileSystem.value
+const filesystem = defaultFileSystem
 const expandedKeys = ref<string[]>([]);
 const loadedKeys = ref<string[]>([]);
 const selectedKeys = ref<string[]>([]);
 const treeData = ref<TreeProps['treeData']>([
     {
         title: '/',
-        key: vscode.Uri.file('/').toString(),
+        key: vscode.Uri.parse('capFile:///').toString(),
         selectable: props.fileType == FileType.Directory,
         isLeaf: false,
     },
@@ -60,7 +60,7 @@ const onLoadData: TreeProps['loadData'] = async (treeNode) => {
         return;
     }
     try {
-        const files = await filesystem.readdir(vscode.Uri.parse(treeNode.key.toString()))
+        const files = await filesystem.readDirectory(vscode.Uri.parse(treeNode.key.toString()))
         if (treeNode.dataRef) {
             treeNode.dataRef.children = files.map(file => {
                 if (typeof treeNode.eventKey !== 'string') throw new Error('not a uri')

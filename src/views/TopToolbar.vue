@@ -50,7 +50,7 @@ import {
 import type { MenuProps } from 'ant-design-vue';
 import * as vscode from 'vscode'
 import FilePicker from './FilePicker.vue'
-import { FileType } from 'vscode/service-override/files';
+import { FileType } from 'vscode';
 
 const fileType = ref<FileType>(FileType.Directory)
 const filePickerOpen = ref<boolean>(false)
