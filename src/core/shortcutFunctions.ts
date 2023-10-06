@@ -1,15 +1,19 @@
 import * as vscode from 'vscode'
 import { IonButton, toastController } from '@ionic/vue';
+import { checkDocument } from './app'
 import { rootPath } from './appConfigs'
 import { Modal } from 'ant-design-vue';
 
+export async function execCommand(command: string) {
+    await vscode.commands.executeCommand(command);
+}
 export async function save() {
     await vscode.window.activeTextEditor?.document.save()
-    const toast = await toastController.create({
-        message: '保存成功！',
-        duration: 1500,
-    });
-    await toast.present();
+    // const toast = await toastController.create({
+    //     message: '保存成功！',
+    //     duration: 1500,
+    // });
+    // await toast.present();
 }
 export async function undo() {
     await vscode.commands.executeCommand('undo');
@@ -42,7 +46,7 @@ export async function openExplorer() {
 export async function insertText(text: string) {
     const editor = vscode.window.activeTextEditor;
     await editor?.insertSnippet(new vscode.SnippetString(text));
-    // vscode.commands.executeCommand('editor.action.triggerSuggest');
+    // vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', vscode.window.activeTextEditor.uri);
 }
 
 export async function moveCursorByOffset(lineOffset: number = 0, characterOffset: number = 0) {
@@ -72,9 +76,13 @@ export async function openSettings() {
     await vscode.commands.executeCommand('workbench.action.openSettings');
 }
 export async function openNewFolder(uri: string | vscode.Uri) {
+    await checkDocument("存在未保存文件，是否继续")
     await vscode.commands.executeCommand('workbench.action.closeAllEditors')
     vscode.workspace.updateWorkspaceFolders(0, vscode.workspace.workspaceFolders?.length, {
         uri: vscode.Uri.parse(uri.toString()),
     })
     rootPath.value = uri.toString();
+}
+export async function openNewFile(uri: string | vscode.Uri) {
+    vscode.window.showTextDocument(vscode.Uri.parse(uri.toString()))
 }

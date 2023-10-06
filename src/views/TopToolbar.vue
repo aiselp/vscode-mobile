@@ -1,7 +1,5 @@
 <template>
-    <a-modal v-model:open="filel" title="输入文件夹路径" @ok="openFolder">
-        <a-input v-model:value="path" style="width:100%" />
-    </a-modal>
+    <FilePicker :file-type="fileType" v-model:is-open="filePickerOpen"></FilePicker>
     <div v-show="enableTopToolbar" style="display: flex;justify-content: center;">
         <a-space-compact class="warp" size="middle" wrap>
             <a-dropdown :trigger="['click']">
@@ -11,7 +9,7 @@
                     <a-menu @click="">
                         <a-menu-item @click="openFile">打开文件</a-menu-item>
                         <a-menu-divider />
-                        <a-menu-item @click="filel = true">打开文件夹</a-menu-item>
+                        <a-menu-item @click="openFolder">打开文件夹</a-menu-item>
                     </a-menu>
                 </template>
             </a-dropdown>
@@ -41,20 +39,22 @@
 </template>
 <script setup lang="ts" >
 import { IonIcon } from '@ionic/vue';
-import { ref, onMounted, h } from 'vue'
+import { ref, h } from 'vue'
 import { save, arrowUndo, arrowRedo, play, pencil, document } from 'ionicons/icons';
-import { enableBottomShortcuts, enableTopToolbar, rootPath } from '../core/appConfigs'
+import { enableTopToolbar, rootPath } from '../core/appConfigs'
 import type { SizeType } from 'ant-design-vue/es/config-provider';
-import { save as saveFile, undo, redo, gotoline, find, commentLine, formatDocument, openNewFolder } from '../core/shortcutFunctions'
+import {
+    save as saveFile, undo, redo, gotoline, execCommand,
+    find, commentLine, formatDocument
+} from '../core/shortcutFunctions'
 import type { MenuProps } from 'ant-design-vue';
 import * as vscode from 'vscode'
-import { Modal } from 'ant-design-vue';
-import { createVNode, watch } from 'vue';
-import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import FilePicker from './FilePicker.vue'
+import { FileType } from 'vscode';
 
-
-const filel = ref<boolean>(false)
-const path = ref<string>(rootPath.value)
+const fileType = ref<FileType>(FileType.Directory)
+const filePickerOpen = ref<boolean>(false)
+const foldAll = ref<boolean>(false)
 const size = ref<SizeType>("middle");
 const editMenu: string[] = ['查找/替换', '跳转', '折叠/展开', '执行命令']
 const onEditMenuClick: MenuProps['onClick'] = async ({ key }) => {
@@ -66,7 +66,8 @@ const onEditMenuClick: MenuProps['onClick'] = async ({ key }) => {
             await gotoline()
             break;
         case 2:
-
+            foldAll.value = !foldAll.value;
+            foldAll.value ? execCommand('editor.foldAll') : execCommand('editor.unfoldAll')
             break;
         case 3:
             await commentLine()
@@ -87,24 +88,12 @@ async function start() {
     });
 }
 function openFolder() {
-    filel.value = false
-    openNewFolder(path.value)
+    fileType.value = FileType.Directory
+    filePickerOpen.value = true;
 }
 function openFile() {
-    Modal.confirm({
-        title: '提示',
-        icon: createVNode(ExclamationCircleOutlined),
-        content: '存在未保存文件，是否退出？',
-        okText: 'Yes',
-        okType: 'danger',
-        cancelText: 'No',
-        onOk: () => {
-
-        },
-        onCancel: () => {
-
-        }
-    });
+    fileType.value = FileType.File
+    filePickerOpen.value = true
 }
 </script>
 <style scoped>

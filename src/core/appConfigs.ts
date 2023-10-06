@@ -9,3 +9,5 @@ export const symbols = useStorage('app.symbols', defaultSymbols)
 
 export const meunSate = ref<boolean>(false)
 export const rootPath = useStorage<string>('app.rootPath', '/')
+
+export const editorOpened = useStorage<string[]>('app.editorOpened', [])
