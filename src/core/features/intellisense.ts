@@ -1,4 +1,11 @@
 import * as vscode from 'vscode'
+import 'monaco-editor/esm/vs/language/json/monaco.contribution.js'
+import 'monaco-editor/esm/vs/language/typescript/monaco.contribution.js'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
+import typescriptGlobal from '../../../node_modules/@types/node/globals.d.ts?raw'
+import typescriptConsole from '../../../node_modules/@types/node/console.d.ts?raw'
+import typescriptProcess from '../../../node_modules/@types/node/process.d.ts?raw'
+
 import { onExtHostInitialized } from 'vscode/extensions'
 import 'vscode/default-extensions/json-language-features'
 import 'vscode/default-extensions/typescript-language-features'
@@ -67,4 +74,23 @@ vscode.languages.registerDefinitionProvider('javascript', {
     }
     return []
   }
+})
+
+const compilerOptions: Parameters<typeof monaco.languages.typescript.typescriptDefaults.setCompilerOptions>[0] = {
+  target: monaco.languages.typescript.ScriptTarget.ES2016,
+  allowNonTsExtensions: true,
+  moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+  module: monaco.languages.typescript.ModuleKind.CommonJS,
+  noEmit: true,
+  lib: ['es2020']
+}
+
+monaco.languages.typescript.typescriptDefaults.setCompilerOptions(compilerOptions)
+monaco.languages.typescript.typescriptDefaults.addExtraLib(typescriptGlobal, 'node/globals.d.ts')
+monaco.languages.typescript.typescriptDefaults.addExtraLib(typescriptConsole, 'node/console.d.ts')
+monaco.languages.typescript.typescriptDefaults.addExtraLib(typescriptProcess, 'node/process.d.ts')
+
+monaco.languages.json.jsonDefaults.setModeConfiguration({
+  ...monaco.languages.json.jsonDefaults.modeConfiguration,
+  tokens: false // Disable monarch tokenizer as we use TextMate here
 })

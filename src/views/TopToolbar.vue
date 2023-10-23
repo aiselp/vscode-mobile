@@ -1,6 +1,6 @@
 <template>
     <FilePicker :file-type="fileType" v-model:is-open="filePickerOpen"></FilePicker>
-    <div v-show="enableTopToolbar" style="display: flex;justify-content: center;">
+    <div v-show="enableTopToolbar" :style="style">
         <a-space-compact class="warp" size="middle" wrap>
             <a-dropdown :trigger="['click']">
                 <a-button :size="size" class="dbutton" :icon="h(IonIcon, { icon: document })">
@@ -18,7 +18,7 @@
                     <span>编辑</span></a-button>
                 <template #overlay>
                     <a-menu @click="onEditMenuClick">
-                        <a-menu-item v-for="(menu, index) in editMenu" :key="index">
+                        <a-menu-item v-for="( menu, index ) in  editMenu " :key="index">
                             {{ menu }}
                         </a-menu-item>
                         <a-menu-divider />
@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts" >
 import { IonIcon } from '@ionic/vue';
-import { ref, h } from 'vue'
+import { ref, h, computed } from 'vue'
 import { save, arrowUndo, arrowRedo, play, pencil, document } from 'ionicons/icons';
 import { enableTopToolbar, rootPath } from '../core/appConfigs'
 import type { SizeType } from 'ant-design-vue/es/config-provider';
@@ -47,10 +47,20 @@ import {
     save as saveFile, undo, redo, gotoline, execCommand,
     find, commentLine, formatDocument
 } from '../core/shortcutFunctions'
+import { theme } from 'ant-design-vue';
 import type { MenuProps } from 'ant-design-vue';
 import * as vscode from 'vscode'
 import FilePicker from './FilePicker.vue'
 import { FileType } from 'vscode';
+
+const style = computed(() => {
+    const { token } = theme.useToken()
+    return {
+        "background-color": token.value.colorBgBase,
+        "justify-content": "center",
+        "display": " flex",
+    }
+})
 
 const fileType = ref<FileType>(FileType.Directory)
 const filePickerOpen = ref<boolean>(false)

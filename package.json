@@ -1,6 +1,6 @@
 {
   "name": "vscode-mobile",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -24,7 +24,7 @@
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
     "@vueuse/core": "^10.2.1",
-    "ant-design-vue": "^4.0.0",
+    "ant-design-vue": "^4.0.6",
     "eventemitter3": "^5.0.1",
     "ionicons": "^7.0.0",
     "js-base64": "^3.7.5",
