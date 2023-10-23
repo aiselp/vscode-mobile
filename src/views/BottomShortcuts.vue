@@ -32,6 +32,7 @@ import { IonIcon } from '@ionic/vue';
 import { enableBottomShortcuts, symbols } from '../core/appConfigs'
 import { moveCursorByOffset, selection, copySelection } from '../core/shortcutFunctions'
 import { keyboard as keyboardStatus } from '../core/native/native_status'
+import { isEditorActive } from '../core/app'
 
 const currentInputBox = ref<HTMLElement>()
 
@@ -39,11 +40,9 @@ const show = computed<boolean>(() => {
     if (import.meta.env.DEV) {
         return enableBottomShortcuts.value
     }
-    return enableBottomShortcuts.value && keyboardStatus.value
+    return enableBottomShortcuts.value && keyboardStatus.value && isEditorActive()
 })
 function updateInputBox() {
-    console.log(document.activeElement);
-
     currentInputBox.value = document.activeElement as HTMLElement
 }
 function resetFocus() {

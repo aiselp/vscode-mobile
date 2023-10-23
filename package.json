@@ -1,6 +1,6 @@
 {
   "name": "vscode-mobile",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -24,18 +24,18 @@
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
     "@vueuse/core": "^10.2.1",
-    "ant-design-vue": "^4.0.0",
+    "ant-design-vue": "^4.0.6",
     "eventemitter3": "^5.0.1",
     "ionicons": "^7.0.0",
     "js-base64": "^3.7.5",
-    "monaco-editor": "^0.39.0",
-    "vscode": "npm:@codingame/monaco-vscode-api@^1.79.11",
+    "vscode": "npm:@codingame/monaco-vscode-api@^1.81.7",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@capacitor/cli": "5.1.1",
-    "@types/vscode": "^1.79.1",
+    "@rollup/pluginutils": "^5.0.3",
+    "@types/vscode": "^1.82.0",
     "@vitejs/plugin-legacy": "^4.0.2",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^11.0.2",

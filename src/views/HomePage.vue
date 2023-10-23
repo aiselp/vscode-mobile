@@ -1,23 +1,25 @@
 <template>
-  <ion-split-pane content-id="main-content">
-    <ion-menu menu-id="main-menu" @ionDidOpen="meunSate = true" @ionDidClose="meunSate = false" type="reveal"
-      contentId="main-content">
-      <MenuPage></MenuPage>
-    </ion-menu>
+  <ConfigProvider :theme="ant_theme">
+    <ion-split-pane content-id="main-content">
+      <ion-menu menu-id="main-menu" @ionDidOpen="meunSate = true" @ionDidClose="meunSate = false" type="reveal"
+        contentId="main-content">
+        <MenuPage></MenuPage>
+      </ion-menu>
 
-    <!-- ----------body-------------- -->
-    <div class="ion-page" style="width: 100%;" id="main-content">
-      <ion-content :fullscreen="true">
-        <div id="container">
-          <TopToolbar></TopToolbar>
-          <div ref="editors" style="flex-grow: 1;"></div>
-          <div ref="statusBar"></div>
-        </div>
-      </ion-content>
-    </div>
-  </ion-split-pane>
-  <BottomShortcuts></BottomShortcuts>
-  <bottom-log-page></bottom-log-page>
+      <!-- ----------body-------------- -->
+      <div class="ion-page" style="width: 100%;" id="main-content">
+        <ion-content :fullscreen="true">
+          <div id="container">
+            <TopToolbar></TopToolbar>
+            <div ref="editors" style="flex-grow: 1;"></div>
+            <div ref="statusBar"></div>
+          </div>
+        </ion-content>
+      </div>
+    </ion-split-pane>
+    <BottomShortcuts></BottomShortcuts>
+    <bottom-log-page></bottom-log-page>
+  </ConfigProvider>
 </template>
 
 <script setup lang="ts">
@@ -29,6 +31,8 @@ import { IonContent, IonSplitPane, IonMenu, menuController } from '@ionic/vue';
 import { ref, onMounted, watch } from 'vue'
 import { renderEditorPart, renderStatusBarPart } from '../core/setup'
 import { meunSate } from '../core/appConfigs'
+import { ConfigProvider } from 'ant-design-vue';
+import { ant_theme } from '../theme'
 
 const editors = ref<HTMLElement>()
 const panel = ref<HTMLElement>()
@@ -57,15 +61,5 @@ onMounted(() => {
 
 #sidebar {
   text-align: left;
-}
-</style>
-<style>
-.monaco-icon-label::before {
-  width: 22px;
-}
-
-.monaco-tl-twistie {
-  transform: translateX(6px);
-  margin-right: 7px;
 }
 </style>

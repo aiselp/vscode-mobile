@@ -25,6 +25,7 @@ import '@ionic/vue/css/display.css';
 import './theme/variables.css';
 
 import './core/app'
+import './core/styles/vscode-style-override.css'
 
 
 const app = createApp(App)

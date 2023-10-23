@@ -1,39 +1,32 @@
-import {
-    IFileSystemProviderWithFileReadWriteCapability,
-    FileSystemProviderCapabilities, registerFileSystemOverlay,
-    FileType, IFileChange, IStat, IFileOverwriteOptions, IFileWriteOptions,
-    IWatchOptions, FileSystemProviderError, FileSystemProviderErrorCode
-} from 'vscode/service-override/files'
+
 import * as vscode from 'vscode'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem'
+import { Filesystem, Directory } from '@capacitor/filesystem'
 import { Base64 } from 'js-base64';
-import { E as Event, a as IDisposable, C } from 'vscode/dist/event';
+import { Emitter, Event } from 'vscode/dist/vscode/vs/base/common/event.js';
+import { FileType, FileSystemError } from 'vscode';
+
 
 const directory = Directory.ExternalStorage
 
-class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
+class FakeFileSystem implements vscode.FileSystemProvider {
+    static readonly scheme: string = 'capFile'
 
-    capabilities: FileSystemProviderCapabilities;
     onDidChangeCapabilities: Event<void>;
-    onDidChangeFile: Event<readonly IFileChange[]>;
+    onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]>;
 
     constructor() {
-        this.capabilities = FileSystemProviderCapabilities.FileReadWrite | FileSystemProviderCapabilities.PathCaseSensitive
+
         const onDidChangeCapabilities = new vscode.EventEmitter<void>()
         this.onDidChangeCapabilities = onDidChangeCapabilities.event
-        const onDidChangeFile = new vscode.EventEmitter<IFileChange[]>()
+        const onDidChangeFile = new vscode.EventEmitter<vscode.FileChangeEvent[]>()
         this.onDidChangeFile = onDidChangeFile.event
     }
-    watch(resource: monaco.Uri, opts: IWatchOptions): IDisposable {
-        return {
-            dispose: () => { }
-        }
-    }
-    async stat(resource: monaco.Uri): Promise<IStat> {
+
+    async stat(uri: vscode.Uri): Promise<vscode.FileStat> {
         try {
             const stat = await Filesystem.stat({
-                path: resource.path,
+                path: uri.path,
                 directory
             })
             return {
@@ -43,21 +36,28 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
                 size: stat.size
             }
         } catch (err) {
-            const e = FileSystemProviderError.create(err as Error, FileSystemProviderErrorCode.FileNotFound)
+            const e = FileSystemError.FileNotFound(uri)
             throw e;
         }
     }
-    async mkdir(resource: monaco.Uri): Promise<void> {
+
+
+    watch(resource: monaco.Uri, opts: any) {
+        return {
+            dispose: () => { }
+        }
+    }
+    async createDirectory(uri: vscode.Uri): Promise<void> {
         try {
             await Filesystem.mkdir({
-                path: resource.path,
+                path: uri.path,
                 directory
             })
         } catch (err) {
-            throw FileSystemProviderError.create(err as Error, FileSystemProviderErrorCode.Unavailable)
+            throw FileSystemError.Unavailable(uri)
         }
     }
-    async rename(from: monaco.Uri, to: monaco.Uri, opts: IFileOverwriteOptions): Promise<void> {
+    async rename(from: monaco.Uri, to: monaco.Uri, opts: any): Promise<void> {
         try {
             await Filesystem.rename({
                 from: from.path,
@@ -65,17 +65,17 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
                 directory
             })
         } catch (err) {
-            throw FileSystemProviderError.create(err as Error, FileSystemProviderErrorCode.Unavailable)
+            throw FileSystemError.Unavailable((err as Error).message)
         }
     }
-    async writeFile(resource: monaco.Uri, content: Uint8Array, opts: IFileWriteOptions): Promise<void> {
+    async writeFile(resource: monaco.Uri, content: Uint8Array, opts: any): Promise<void> {
         console.log('writeFile', resource.toString());
         let stat, path = resource.path;
         try {
             stat = await Filesystem.stat({ path: resource.path, directory })
-            if (!opts.overwrite) throw FileSystemProviderError.create('fileExists', FileSystemProviderErrorCode.FileExists)
+            if (!opts.overwrite) throw FileSystemError.FileExists(resource)
         } catch (err2) {
-            if (!opts.create) throw FileSystemProviderError.create(err2 as Error, FileSystemProviderErrorCode.FileNotFound);
+            if (!opts.create) throw FileSystemError.FileNotFound(resource)
         }
         if (opts.atomic) {
             path += '.vscodecache'
@@ -88,7 +88,7 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
                 from: path, to: resource.path, directory
             })
         } catch (err) {
-            throw FileSystemProviderError.create(err as Error, FileSystemProviderErrorCode.Unknown)
+            throw FileSystemError.Unavailable(resource)
         }
     }
 
@@ -99,38 +99,38 @@ class FakeFileSystem implements IFileSystemProviderWithFileReadWriteCapability {
                 throw new Error('file is too big')
             }
             const { data } = await Filesystem.readFile({
-                path: resource.fsPath,
+                path: resource.path,
                 directory
             })
             return Base64.toUint8Array(data)
         } catch (err) {
-            throw FileSystemProviderError.create(err as Error, FileSystemProviderErrorCode.FileNotFound)
+            throw FileSystemError.FileNotFound(resource)
         }
     }
 
     async delete(resource: monaco.Uri): Promise<void> {
         try {
             await Filesystem.deleteFile({
-                path: resource.fsPath, directory
+                path: resource.path, directory
             })
         } catch (err) {
-            throw FileSystemProviderError.create(err as Error, FileSystemProviderErrorCode.Unknown)
+            throw FileSystemError.Unavailable(resource)
         }
     }
 
-    async readdir(dir: monaco.Uri): Promise<[string, FileType][]> {
+    async readDirectory(dir: monaco.Uri): Promise<[string, vscode.FileType][]> {
         try {
             const { files } = await Filesystem.readdir({
-                path: dir.fsPath,
+                path: dir.path,
                 directory
             })
-            console.log(files.map(file => file.name));
+            // console.log(files.map(file => file.name));
             return files.map(file => {
                 const type = file.type === 'directory' ? FileType.Directory : FileType.File
                 return [file.name, type]
             })
         } catch (err) {
-            throw FileSystemProviderError.create(err as Error, FileSystemProviderErrorCode.Unavailable)
+            throw FileSystemError.Unavailable(dir)
         }
     }
 }
