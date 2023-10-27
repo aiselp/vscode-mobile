@@ -5,7 +5,7 @@
         </a-card>
         <a-card class="item">
             <div class="body">
-                <div>主题</div>
+                <div>深色模式</div>
                 <a-dropdown>
                     <template #overlay>
                         <a-menu>
@@ -37,16 +37,14 @@
 </template>
 <script setup lang="ts">
 import { enableBottomShortcuts, enableTopToolbar } from '../core/appConfigs'
-import { IonItem, IonLabel, IonList, IonInput, IonText, IonToggle } from '@ionic/vue';
 import { openSettings } from '../core/shortcutFunctions'
-import { save, arrowUndo, play, pencil, document } from 'ionicons/icons';
 import { DownOutlined } from '@ant-design/icons-vue';
 import { themeList, currentTheme, switchTheme } from '../theme'
 import { theme } from 'ant-design-vue';
 import { computed } from 'vue'
 
+const { token } = theme.useToken()
 const style = computed(() => {
-    const { token } = theme.useToken()
     return {
         "background-color": token.value.colorBgBase,
     }

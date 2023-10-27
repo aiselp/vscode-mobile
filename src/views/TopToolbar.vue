@@ -47,16 +47,13 @@ import {
     save as saveFile, undo, redo, gotoline, execCommand,
     find, commentLine, formatDocument
 } from '../core/shortcutFunctions'
-import { theme } from 'ant-design-vue';
 import type { MenuProps } from 'ant-design-vue';
 import * as vscode from 'vscode'
 import FilePicker from './FilePicker.vue'
 import { FileType } from 'vscode';
 
 const style = computed(() => {
-    const { token } = theme.useToken()
     return {
-        "background-color": token.value.colorBgBase,
         "justify-content": "center",
         "display": " flex",
     }

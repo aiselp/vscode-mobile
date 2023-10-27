@@ -1,25 +1,23 @@
 <template>
-  <ConfigProvider :theme="ant_theme">
-    <ion-split-pane content-id="main-content">
-      <ion-menu menu-id="main-menu" @ionDidOpen="meunSate = true" @ionDidClose="meunSate = false" type="reveal"
-        contentId="main-content">
-        <MenuPage></MenuPage>
-      </ion-menu>
+  <ion-split-pane content-id="main-content">
+    <ion-menu menu-id="main-menu" @ionDidOpen="meunSate = true" @ionDidClose="meunSate = false" type="reveal"
+      contentId="main-content">
+      <MenuPage></MenuPage>
+    </ion-menu>
 
-      <!-- ----------body-------------- -->
-      <div class="ion-page" style="width: 100%;" id="main-content">
-        <ion-content :fullscreen="true">
-          <div id="container">
-            <TopToolbar></TopToolbar>
-            <div ref="editors" style="flex-grow: 1;"></div>
-            <div ref="statusBar"></div>
-          </div>
-        </ion-content>
-      </div>
-    </ion-split-pane>
-    <BottomShortcuts></BottomShortcuts>
-    <bottom-log-page></bottom-log-page>
-  </ConfigProvider>
+    <!-- ----------body-------------- -->
+    <div class="ion-page" style="width: 100%;" id="main-content">
+      <ion-content :fullscreen="true">
+        <div :style="style" id="container">
+          <TopToolbar></TopToolbar>
+          <div ref="editors" style="flex-grow: 1;"></div>
+          <div ref="statusBar"></div>
+        </div>
+      </ion-content>
+    </div>
+  </ion-split-pane>
+  <BottomShortcuts :style="style"></BottomShortcuts>
+  <bottom-log-page :style="style"></bottom-log-page>
 </template>
 
 <script setup lang="ts">
@@ -28,11 +26,18 @@ import TopToolbar from './TopToolbar.vue'
 import MenuPage from './MenuPage.vue';
 import BottomShortcuts from './BottomShortcuts.vue'
 import { IonContent, IonSplitPane, IonMenu, menuController } from '@ionic/vue';
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { renderEditorPart, renderStatusBarPart } from '../core/setup'
 import { meunSate } from '../core/appConfigs'
-import { ConfigProvider } from 'ant-design-vue';
-import { ant_theme } from '../theme'
+import { theme } from 'ant-design-vue';
+
+const { token } = theme.useToken()
+const style = computed(() => {
+  return {
+    "background-color": token.value.colorBgBase,
+  }
+})
+
 
 const editors = ref<HTMLElement>()
 const panel = ref<HTMLElement>()
