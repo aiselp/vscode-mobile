@@ -30,7 +30,7 @@ import { ref, computed, h } from "vue"
 import { crop, chevronBack, chevronForward, chevronDown, newspaper, chevronUp, copy, logoNodejs, swapHorizontal } from 'ionicons/icons';
 import { IonIcon } from '@ionic/vue';
 import { enableBottomShortcuts, symbols } from '../core/appConfigs'
-import { moveCursorByOffset, selection, copySelection } from '../core/shortcutFunctions'
+import { moveCursorByOffset, selection, copySelection, insertText2 } from '../core/shortcutFunctions'
 import { keyboard as keyboardStatus } from '../core/native/native_status'
 import { isEditorActive } from '../core/app'
 
@@ -49,12 +49,15 @@ function resetFocus() {
     currentInputBox.value?.focus?.();
 }
 function inputText(str: string) {
+    return insertText2(str)
+    /*
     const inputEvent = new Event('input', {
         bubbles: true,
         cancelable: true,
     });
     (currentInputBox.value as HTMLIonTextareaElement).value += str
     currentInputBox.value?.dispatchEvent(inputEvent)
+    */
 }
 function test(t: string) {
     console.log(t);

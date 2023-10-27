@@ -90,6 +90,11 @@ monaco.languages.typescript.typescriptDefaults.addExtraLib(typescriptGlobal, 'no
 monaco.languages.typescript.typescriptDefaults.addExtraLib(typescriptConsole, 'node/console.d.ts')
 monaco.languages.typescript.typescriptDefaults.addExtraLib(typescriptProcess, 'node/process.d.ts')
 
+monaco.languages.typescript.javascriptDefaults.setCompilerOptions(compilerOptions)
+monaco.languages.typescript.javascriptDefaults.addExtraLib(typescriptGlobal, 'node/globals.d.ts')
+monaco.languages.typescript.javascriptDefaults.addExtraLib(typescriptConsole, 'node/console.d.ts')
+monaco.languages.typescript.javascriptDefaults.addExtraLib(typescriptProcess, 'node/process.d.ts')
+
 monaco.languages.json.jsonDefaults.setModeConfiguration({
   ...monaco.languages.json.jsonDefaults.modeConfiguration,
   tokens: false // Disable monarch tokenizer as we use TextMate here

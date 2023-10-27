@@ -2,6 +2,8 @@ import * as vscode from 'vscode'
 import { IonButton, toastController } from '@ionic/vue';
 import { checkDocument } from './app'
 import { rootPath } from './appConfigs'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
+
 import { Modal } from 'ant-design-vue';
 
 export async function execCommand(command: string) {
@@ -47,6 +49,16 @@ export async function insertText(text: string) {
     const editor = vscode.window.activeTextEditor;
     await editor?.insertSnippet(new vscode.SnippetString(text));
     // vscode.commands.executeCommand('vscode.executeDocumentSymbolProvider', vscode.window.activeTextEditor.uri);
+}
+export async function insertText2(text: string) {
+    const active = vscode.window.activeTextEditor
+    if (!active) return
+    for (const editor of monaco.editor.getEditors()) {
+        if (editor.getValue() === active.document.getText()) {
+            editor.trigger("keyboard", "type", { text })
+            return
+        }
+    }
 }
 
 export async function moveCursorByOffset(lineOffset: number = 0, characterOffset: number = 0) {
