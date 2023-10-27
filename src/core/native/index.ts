@@ -1,16 +1,30 @@
 import { checkDocument } from '../app'
-import { App } from '@capacitor/app';
-import { useBackButton, useIonRouter } from '@ionic/vue';
+import * as capacitor from './capacitor'
+import * as autox from './autox'
+import { IBaseApp } from './native_interface';
 
 
-useBackButton(0, async (processNextHandler) => {
-    console.log('Handler was called!');
-    try {
-        await checkDocument('存在未保存文件，是否退出？')
-        setTimeout(() => {
-            App.exitApp();
-        }, 20)
-    } catch {
-        processNextHandler()
+export async function getNativeApp(): Promise<IBaseApp | null> {
+    if (await capacitor.isSupported()) {
+        return capacitor.getCapacitorApp()
     }
-});
+    if (await autox.isSupported()) {
+        return autox.getAutoxApp()
+    }
+    return null
+}
+
+getNativeApp().then((native) => {
+    if (native) {
+        native.onBackButton(0, async (processNextHandler) => {
+            try {
+                await checkDocument('存在未保存文件，是否退出？')
+                setTimeout(() => {
+                    native.exitApp();
+                }, 20)
+            } catch {
+                processNextHandler()
+            }
+        })
+    }
+})

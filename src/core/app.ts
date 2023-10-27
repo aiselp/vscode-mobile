@@ -12,7 +12,6 @@ import 'vscode/default-extensions/xml'
 import 'vscode/default-extensions/theme-seti'
 import 'vscode/default-extensions/references-view'
 import 'vscode/default-extensions/search-result'
-import { jsCode } from "./testdata";
 import './setup'
 import './features/userConfiguration'
 import './features/filesystem'
@@ -28,6 +27,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { meunSate, rootPath, editorOpened } from './appConfigs'
 import { openNewFolder } from './shortcutFunctions'
 import { keyboard } from './native/native_status'
+import { getNativeApp } from './native'
 import { ViewColumn, WorkspaceFolderPickOptions } from 'vscode'
 // const modelRef = await createModelReference(monaco.Uri.file('/tmp/test.js'), jsCode)
 
@@ -40,6 +40,7 @@ vscode.window.onDidChangeActiveTextEditor(() => {
 //已打开编辑器保存和恢复
 onExtHostInitialized(async () => {
   console.log("恢复标签：", editorOpened.value.length);
+  await getNativeApp()
   setTimeout(async () => {
     for (let uri of editorOpened.value) {
       await vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(uri));
@@ -64,7 +65,11 @@ export function isEditorActive(): boolean {
   return !!(e?.classList.contains('monaco-mouse-cursor-text') && (e.tagName == 'textarea'.toLocaleUpperCase()))
 }
 //初始化工作区目录
-openNewFolder(rootPath.value)
+onExtHostInitialized(async () => {
+  await getNativeApp()
+  openNewFolder(rootPath.value)
+})
+
 
 export async function checkDocument(message: string) {
   const isChange = vscode.workspace.textDocuments.some(document => document.isDirty);

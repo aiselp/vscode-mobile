@@ -1,29 +1,30 @@
 
-import * as vscode from 'vscode'
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
+
 import { Filesystem, Directory } from '@capacitor/filesystem'
 import { Base64 } from 'js-base64';
-import { Emitter, Event } from 'vscode/dist/vscode/vs/base/common/event.js';
-import { FileType, FileSystemError } from 'vscode';
+import {
+    FileType, FileSystemError, EventEmitter, Uri,
+    Event, FileSystemProvider, FileChangeEvent, FileStat
+} from 'vscode';
 
 
 const directory = Directory.ExternalStorage
 
-class FakeFileSystem implements vscode.FileSystemProvider {
+class FakeFileSystem implements FileSystemProvider {
     static readonly scheme: string = 'capFile'
 
     onDidChangeCapabilities: Event<void>;
-    onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]>;
+    onDidChangeFile: Event<FileChangeEvent[]>;
 
     constructor() {
 
-        const onDidChangeCapabilities = new vscode.EventEmitter<void>()
+        const onDidChangeCapabilities = new EventEmitter<void>()
         this.onDidChangeCapabilities = onDidChangeCapabilities.event
-        const onDidChangeFile = new vscode.EventEmitter<vscode.FileChangeEvent[]>()
+        const onDidChangeFile = new EventEmitter<FileChangeEvent[]>()
         this.onDidChangeFile = onDidChangeFile.event
     }
 
-    async stat(uri: vscode.Uri): Promise<vscode.FileStat> {
+    async stat(uri: Uri): Promise<FileStat> {
         try {
             const stat = await Filesystem.stat({
                 path: uri.path,
@@ -42,12 +43,12 @@ class FakeFileSystem implements vscode.FileSystemProvider {
     }
 
 
-    watch(resource: monaco.Uri, opts: any) {
+    watch(resource: Uri, opts: any) {
         return {
             dispose: () => { }
         }
     }
-    async createDirectory(uri: vscode.Uri): Promise<void> {
+    async createDirectory(uri: Uri): Promise<void> {
         try {
             await Filesystem.mkdir({
                 path: uri.path,
@@ -57,7 +58,7 @@ class FakeFileSystem implements vscode.FileSystemProvider {
             throw FileSystemError.Unavailable(uri)
         }
     }
-    async rename(from: monaco.Uri, to: monaco.Uri, opts: any): Promise<void> {
+    async rename(from: Uri, to: Uri, opts: any): Promise<void> {
         try {
             await Filesystem.rename({
                 from: from.path,
@@ -68,7 +69,7 @@ class FakeFileSystem implements vscode.FileSystemProvider {
             throw FileSystemError.Unavailable((err as Error).message)
         }
     }
-    async writeFile(resource: monaco.Uri, content: Uint8Array, opts: any): Promise<void> {
+    async writeFile(resource: Uri, content: Uint8Array, opts: any): Promise<void> {
         console.log('writeFile', resource.toString());
         let stat, path = resource.path;
         try {
@@ -92,7 +93,7 @@ class FakeFileSystem implements vscode.FileSystemProvider {
         }
     }
 
-    async readFile(resource: monaco.Uri): Promise<Uint8Array> {
+    async readFile(resource: Uri): Promise<Uint8Array> {
         try {
             const stat = await Filesystem.stat({ path: resource.path, directory })
             if (stat.size > 1024 * 1024 * 5) {
@@ -108,7 +109,7 @@ class FakeFileSystem implements vscode.FileSystemProvider {
         }
     }
 
-    async delete(resource: monaco.Uri): Promise<void> {
+    async delete(resource: Uri): Promise<void> {
         try {
             await Filesystem.deleteFile({
                 path: resource.path, directory
@@ -118,7 +119,7 @@ class FakeFileSystem implements vscode.FileSystemProvider {
         }
     }
 
-    async readDirectory(dir: monaco.Uri): Promise<[string, vscode.FileType][]> {
+    async readDirectory(dir: Uri): Promise<[string, FileType][]> {
         try {
             const { files } = await Filesystem.readdir({
                 path: dir.path,

@@ -1,19 +1,14 @@
-import { Keyboard } from '@capacitor/keyboard';
-import { Capacitor } from '@capacitor/core'
 import { ref, computed, h } from "vue"
+import { syncRef } from '@vueuse/core'
+import { getNativeApp } from './index'
 
 export const keyboard = ref<boolean>(false);
 
-if (Capacitor.isNativePlatform()) {
-    Keyboard.addListener('keyboardDidHide', () => {
-        keyboard.value = false
-    });
-
-    Keyboard.addListener('keyboardDidShow', () => {
-        keyboard.value = true
-    });
-
-} else {
-
+async function init() {
+    const nativeApp = await getNativeApp()
+    if (nativeApp) {
+        syncRef(keyboard, nativeApp.keyboardStatus)
+    }
 }
 
+init()

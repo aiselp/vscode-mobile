@@ -29,19 +29,30 @@ const emit = defineEmits<{
     (e: 'update:isOpen', value: boolean): void
 }>()
 const [messageApi, contextHolder] = message.useMessage();
-const filesystem = defaultFileSystem
+
 const expandedKeys = ref<string[]>([]);
 const loadedKeys = ref<string[]>([]);
 const selectedKeys = ref<string[]>([]);
 const treeData = ref<TreeProps['treeData']>([
     {
         title: '/',
-        key: vscode.Uri.parse('capFile:///').toString(),
+        key: vscode.Uri.parse(`${defaultFileSystem.value?.scheme}:///`).toString(),
         selectable: props.fileType == FileType.Directory,
         isLeaf: false,
     },
     // { title: 'Tree Node', key: '2', isLeaf: true },
 ])
+watch(defaultFileSystem, (n) => {
+    console.log("File system updated:", n?.scheme);
+
+    if (!n) return
+    treeData.value = [{
+        title: '/',
+        key: vscode.Uri.parse(`${n.scheme}:///`).toString(),
+        selectable: props.fileType == FileType.Directory,
+        isLeaf: false,
+    }]
+})
 
 watch(props, () => {
     const data = treeData.value
@@ -59,6 +70,8 @@ const onLoadData: TreeProps['loadData'] = async (treeNode) => {
     if (treeNode.dataRef?.children) {
         return;
     }
+    const filesystem = defaultFileSystem.value?.fileSystem
+    if (!filesystem) return message.error('No filesystem')
     try {
         const files = await filesystem.readDirectory(vscode.Uri.parse(treeNode.key.toString()))
         if (treeNode.dataRef) {
