@@ -1,17 +1,17 @@
 
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
+import * as monaco from 'monaco-editor'
 import * as vscode from 'vscode'
-import 'monaco-editor/esm/vs/editor/editor.all.js'
+// import 'monaco-editor/esm/vs/editor/editor.all.js'
 import './vscode-plugins'
 
-import 'vscode/default-extensions/theme-defaults'
-import 'vscode/default-extensions/javascript'
-import 'vscode/default-extensions/typescript-basics'
-import 'vscode/default-extensions/json'
-import 'vscode/default-extensions/xml'
-import 'vscode/default-extensions/theme-seti'
-import 'vscode/default-extensions/references-view'
-import 'vscode/default-extensions/search-result'
+import '@codingame/monaco-vscode-theme-defaults-default-extension'
+import '@codingame/monaco-vscode-javascript-default-extension'
+import '@codingame/monaco-vscode-typescript-basics-default-extension'
+import '@codingame/monaco-vscode-json-default-extension'
+import '@codingame/monaco-vscode-xml-default-extension'
+import '@codingame/monaco-vscode-theme-seti-default-extension'
+import '@codingame/monaco-vscode-references-view-default-extension'
+import '@codingame/monaco-vscode-search-result-default-extension'
 import './setup'
 import './features/userConfiguration'
 import './features/filesystem'
@@ -29,7 +29,8 @@ import { openNewFolder } from './shortcutFunctions'
 import { keyboard } from './native/native_status'
 import { getNativeApp } from './native'
 import { ViewColumn, WorkspaceFolderPickOptions } from 'vscode'
-// const modelRef = await createModelReference(monaco.Uri.file('/tmp/test.js'), jsCode)
+import { updateUserConfiguration, getUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override'
+import { watchTheme } from '../theme'
 
 const isDev = import.meta.env.DEV;
 
@@ -90,3 +91,4 @@ export async function checkDocument(message: string) {
     })
   }
 }
+watchTheme(getUserConfiguration, updateUserConfiguration)

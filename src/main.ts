@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import '@codingame/monaco-vscode-language-pack-zh-hans'
 import App from './App.vue'
 import router from './router';
 import Antd from 'ant-design-vue';

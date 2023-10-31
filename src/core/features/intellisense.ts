@@ -7,11 +7,11 @@ import typescriptConsole from '../../../node_modules/@types/node/console.d.ts?ra
 import typescriptProcess from '../../../node_modules/@types/node/process.d.ts?raw'
 
 import { onExtHostInitialized } from 'vscode/extensions'
-import 'vscode/default-extensions/json-language-features'
-import 'vscode/default-extensions/typescript-language-features'
-import 'vscode/default-extensions/html-language-features'
-import 'vscode/default-extensions/css-language-features'
-import 'vscode/default-extensions/markdown-language-features'
+import '@codingame/monaco-vscode-json-language-features-default-extension'
+import '@codingame/monaco-vscode-typescript-language-features-default-extension'
+import '@codingame/monaco-vscode-html-language-features-default-extension'
+import '@codingame/monaco-vscode-css-language-features-default-extension'
+import '@codingame/monaco-vscode-markdown-language-features-default-extension'
 
 await new Promise<void>(resolve => onExtHostInitialized(resolve))
 

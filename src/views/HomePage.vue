@@ -44,7 +44,7 @@ const panel = ref<HTMLElement>()
 const statusBar = ref<HTMLElement>()
 onMounted(() => {
   renderEditorPart(editors.value!!)
-  renderStatusBarPart(statusBar.value!!)
+  // renderStatusBarPart(statusBar.value!!)
   //监听菜单状态
   watch(meunSate, async (v) => {
     if (v) {

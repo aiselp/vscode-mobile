@@ -1,6 +1,6 @@
 import {
     updateUserConfiguration, onUserConfigurationChange, getUserConfiguration
-} from 'vscode/service-override/configuration'
+} from '@codingame/monaco-vscode-configuration-service-override'
 import { useStorage } from '@vueuse/core'
 
 const defaultConfiguration: string = JSON.stringify({
