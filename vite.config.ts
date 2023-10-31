@@ -19,6 +19,5 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  // base: "",
   assetsInclude: ['node_modules/vscode-oniguruma/**/*.wasm']
 })

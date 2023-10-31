@@ -52,11 +52,12 @@ import {
     find, commentLine, formatDocument
 } from '../core/shortcutFunctions'
 import type { MenuProps } from 'ant-design-vue';
-import { message } from 'ant-design-vue';
+import { message, notification } from 'ant-design-vue';
 import * as vscode from 'vscode'
 import FilePicker from './FilePicker.vue'
 import { FileType } from 'vscode';
 import * as monaco from 'monaco-editor'
+import { prettierFormat } from '@/core/tools/prettier'
 
 const style = computed(() => {
     return {
@@ -86,7 +87,12 @@ const onEditMenuClick: MenuProps['onClick'] = async ({ key }) => {
             await commentLine()
             break;
         case 4:
-            await formatDocument()
+            prettierFormat().catch((err: Error) => {
+                notification.error({
+                    message: "格式化出错！",
+                    description: err.message
+                })
+            })
             break;
     }
     console.log(`Click on item ${key}`);

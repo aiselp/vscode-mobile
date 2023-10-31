@@ -2,17 +2,25 @@
 import * as monaco from 'monaco-editor'
 import * as vscode from 'vscode'
 // import 'monaco-editor/esm/vs/editor/editor.all.js'
+
+import './setup'
 import './vscode-plugins'
 
-import '@codingame/monaco-vscode-theme-defaults-default-extension'
 import '@codingame/monaco-vscode-javascript-default-extension'
 import '@codingame/monaco-vscode-typescript-basics-default-extension'
 import '@codingame/monaco-vscode-json-default-extension'
 import '@codingame/monaco-vscode-xml-default-extension'
+
+import '@codingame/monaco-vscode-theme-defaults-default-extension'
 import '@codingame/monaco-vscode-theme-seti-default-extension'
 import '@codingame/monaco-vscode-references-view-default-extension'
 import '@codingame/monaco-vscode-search-result-default-extension'
-import './setup'
+import '@codingame/monaco-vscode-configuration-editing-default-extension'
+import '@codingame/monaco-vscode-markdown-math-default-extension'
+import '@codingame/monaco-vscode-npm-default-extension'
+import '@codingame/monaco-vscode-media-preview-default-extension'
+
+
 import './features/userConfiguration'
 import './features/filesystem'
 import './features/customView'
