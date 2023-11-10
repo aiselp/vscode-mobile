@@ -1,47 +1,60 @@
 <template >
     <div :style="style" class="content">
-        <a-card>
-            <a-button @click="openSettings" type="primary" block>打开编辑器设置</a-button>
-        </a-card>
-        <a-card class="item">
+        <Card>
+            <Button @click="openSettings" type="primary" block>打开编辑器设置</Button>
+        </Card>
+        <Card class="item">
             <div class="body">
                 <div>深色模式</div>
-                <a-dropdown>
+                <Dropdown>
                     <template #overlay>
-                        <a-menu>
-                            <a-menu-item @click="() => switchTheme(theme)" v-for="theme in themeList">
+                        <Menu>
+                            <menu-item @click="() => switchTheme(theme)" v-for="theme in themeList">
                                 {{ theme.name }}
-                            </a-menu-item>
-                        </a-menu>
+                            </menu-item>
+                        </Menu>
                     </template>
-                    <a-button>
+                    <Button>
                         {{ currentTheme.name }}
                         <DownOutlined />
-                    </a-button>
-                </a-dropdown>
+                    </Button>
+                </Dropdown>
             </div>
-        </a-card>
-        <a-card class="item">
+        </Card>
+        <Card class="item">
             <div class="body">
                 <div>顶部工具栏</div>
-                <a-switch v-model:checked="enableTopToolbar" />
+                <Switch v-model:checked="enableTopToolbar" />
             </div>
-        </a-card>
-        <a-card class="item">
+        </Card>
+        <Card class="item">
             <div class="body">
                 <div>底部工具栏</div>
-                <a-switch v-model:checked="enableBottomShortcuts" />
+                <Switch v-model:checked="enableBottomShortcuts" />
             </div>
-        </a-card>
+        </Card>
+        <Card class="item">
+            <div @click="() => { }" class="body">
+                <div>启用prettier格式化</div>
+                <Switch v-model:checked="enable" />
+            </div>
+        </Card>
     </div>
 </template>
 <script setup lang="ts">
 import { enableBottomShortcuts, enableTopToolbar } from '../core/appConfigs'
 import { openSettings } from '../core/shortcutFunctions'
 import { DownOutlined } from '@ant-design/icons-vue';
+import {
+    theme, Button,
+    Dropdown, Menu, MenuItem, Card, Switch
+} from "ant-design-vue";
 import { themeList, currentTheme, switchTheme } from '../theme'
-import { theme } from 'ant-design-vue';
 import { computed } from 'vue'
+import { useIonRouter } from '@ionic/vue'
+import { enable } from '../core/tools/prettier'
+
+const router = useIonRouter()
 
 const { token } = theme.useToken()
 const style = computed(() => {

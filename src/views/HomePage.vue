@@ -1,23 +1,27 @@
 <template>
-  <ion-split-pane content-id="main-content">
-    <ion-menu menu-id="main-menu" @ionDidOpen="meunSate = true" @ionDidClose="meunSate = false" type="reveal"
-      contentId="main-content">
-      <MenuPage></MenuPage>
-    </ion-menu>
+  <ion-page>
+    <ion-split-pane content-id="main-content">
+      <ion-menu menu-id="main-menu" @ionDidOpen="meunSate = true" @ionDidClose="meunSate = false" type="reveal"
+        contentId="main-content">
+        <MenuPage></MenuPage>
+      </ion-menu>
 
-    <!-- ----------body-------------- -->
-    <div class="ion-page" style="width: 100%;" id="main-content">
-      <ion-content :fullscreen="true">
-        <div :style="style" id="container">
-          <TopToolbar></TopToolbar>
-          <div ref="editors" style="flex-grow: 1;"></div>
-          <div ref="statusBar"></div>
-        </div>
-      </ion-content>
-    </div>
-  </ion-split-pane>
-  <BottomShortcuts :style="style"></BottomShortcuts>
-  <bottom-log-page :style="style"></bottom-log-page>
+      <!-- ----------body-------------- -->
+      <div class="ion-page" style="width: 100%;" id="main-content">
+        <ion-content :fullscreen="true">
+          <div :style="style" id="container">
+            <TopToolbar></TopToolbar>
+            <div style="flex-grow: 1;overflow: hidden;position: relative;">
+              <div ref="editors" style="height: 100%;width: 100%;"></div>
+            </div>
+            <div ref="statusBar"></div>
+          </div>
+        </ion-content>
+      </div>
+    </ion-split-pane>
+    <BottomShortcuts :style="style"></BottomShortcuts>
+    <bottom-log-page :style="style"></bottom-log-page>
+  </ion-page>
 </template>
 
 <script setup lang="ts">
@@ -25,8 +29,8 @@ import BottomLogPage from './BottomLogPage.vue'
 import TopToolbar from './TopToolbar.vue'
 import MenuPage from './MenuPage.vue';
 import BottomShortcuts from './BottomShortcuts.vue'
-import { IonContent, IonSplitPane, IonMenu, menuController } from '@ionic/vue';
-import { ref, onMounted, watch, computed } from 'vue'
+import { IonContent, IonPage, IonSplitPane, IonMenu, menuController } from '@ionic/vue';
+import { ref, onMounted, watch, watchEffect, computed } from 'vue'
 import { attachPart, Parts } from '@codingame/monaco-vscode-views-service-override'
 import { renderEditorPart, renderStatusBarPart } from '../core/setup'
 import { meunSate } from '../core/appConfigs'
@@ -44,6 +48,13 @@ const style = computed(() => {
 const editors = ref<HTMLElement>()
 const panel = ref<HTMLElement>()
 const statusBar = ref<HTMLElement>()
+watchEffect(() => {
+  const s = style.value
+  const html = statusBar.value?.childNodes[0] as HTMLElement
+  if (html) {
+    Object.assign(html.style, s)
+  }
+})
 onMounted(() => {
   // renderStatusBarPart(statusBar.value!!)
   renderEditorPart(editors.value!!)

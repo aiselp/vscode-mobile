@@ -1,8 +1,8 @@
 <template >
     <ion-content>
         <div :style="style" style="display: flex;height: 100%;width: 100%;flex-direction: column;">
-            <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items" />
-            <div style="display: flex;flex-grow: 1;;width: 100%;">
+            <Menu v-model:selectedKeys="current" mode="horizontal" :items="items" />
+            <div style="flex-grow: 1;width: 100%;padding: 0px;overflow: hidden;">
                 <div ref="activityBar" style="display: none;"></div>
                 <div id="sidebar" v-show="current[0] === 'search' || current[0] === 'file'"
                     style="width: 100%;height: 100%;" ref="sidebar"></div>
@@ -19,7 +19,8 @@ import { MenuProps } from 'ant-design-vue';
 import { renderSidebarPart, renderActivitybarPar } from '../core/setup'
 import SettingMenu from './SettingMenu.vue';
 import { openSearch, openExplorer } from '../core/shortcutFunctions'
-import { theme } from 'ant-design-vue';
+import { theme, Menu, } from "ant-design-vue";
+import { useElementSize } from '@vueuse/core'
 
 const { token } = theme.useToken()
 const style = computed(() => {
@@ -32,6 +33,14 @@ const style = computed(() => {
 const current = ref<string[]>(['file']);
 const sidebar = ref<HTMLElement>()
 const activityBar = ref<HTMLElement>()
+
+const { height: sidebarHeight } = useElementSize(sidebar)
+const stop = watch(sidebarHeight, (height) => {
+    if (height > 100) {
+        stop()
+        sidebar.value!!.style.height = height + 'px'
+    }
+})
 
 watch(current, ([value]) => {
     console.log(value);

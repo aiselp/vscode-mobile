@@ -103,7 +103,9 @@ class FakeFileSystem implements FileSystemProvider {
                 path: resource.path,
                 directory
             })
-            return Base64.toUint8Array(data)
+            if (data instanceof Blob) {
+                return new Uint8Array(await data.arrayBuffer())
+            } else return Base64.toUint8Array(data)
         } catch (err) {
             throw FileSystemError.FileNotFound(resource)
         }

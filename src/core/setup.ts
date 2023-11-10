@@ -3,7 +3,7 @@ import { initialize as initializeVscodeExtensions } from 'vscode/extensions'
 import getModelServiceOverride from '@codingame/monaco-vscode-model-service-override'
 import getNotificationServiceOverride from '@codingame/monaco-vscode-notifications-service-override'
 import getDialogsServiceOverride from '@codingame/monaco-vscode-dialogs-service-override'
-import getConfigurationServiceOverride from '@codingame/monaco-vscode-configuration-service-override'
+import getConfigurationServiceOverride, { IStoredWorkspace, initUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override'
 import getKeybindingsServiceOverride from '@codingame/monaco-vscode-keybindings-service-override'
 import getTextmateServiceOverride from '@codingame/monaco-vscode-textmate-service-override'
 import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-override'
@@ -68,7 +68,13 @@ await initializeMonacoService({
     ...getAudioCueServiceOverride(),
     ...getDebugServiceOverride(),
     ...getPreferencesServiceOverride(),
-    ...getViewsServiceOverride(openNewCodeEditor),
+    ...getViewsServiceOverride(openNewCodeEditor, undefined, state => ({
+        ...state,
+        editor: {
+            ...state.editor,
+            restoreEditors: true
+        }
+    })),
     ...getSnippetServiceOverride(),
     ...getQuickAccessServiceOverride({
         isKeybindingConfigurationVisible: isEditorPartVisible,
@@ -80,6 +86,16 @@ await initializeMonacoService({
     ...getMarkersServiceOverride(),
     ...getLanguageDetectionWorkerServiceOverride(),
     ...getStorageServiceOverride()
+}, document.body, {
+    workspaceProvider: {
+        trusted: true,
+        async open() {
+            return false
+        },
+        workspace: {
+            folderUri: monaco.Uri.file('/tmp')
+        }
+    }
 })
 StandaloneServices.get(ILogService).setLevel(LogLevel.Off)
 

@@ -2,7 +2,6 @@
 import '@codingame/monaco-vscode-language-pack-zh-hans'
 import * as monaco from 'monaco-editor'
 import * as vscode from 'vscode'
-// import 'monaco-editor/esm/vs/editor/editor.all.js'
 
 import './setup'
 import './vscode-plugins'
@@ -75,6 +74,7 @@ export function isEditorActive(): boolean {
 }
 //初始化工作区目录
 onExtHostInitialized(async () => {
+  await import('./setup_monaco')
   await getNativeApp()
   openNewFolder(rootPath.value)
 })

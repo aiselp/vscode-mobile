@@ -1,5 +1,5 @@
 import { useDark, useStorage, usePreferredDark } from '@vueuse/core'
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { theme } from 'ant-design-vue';
 import { updateUserConfiguration, getUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override'
 
@@ -47,10 +47,10 @@ export const ant_theme = computed<ThemeConfig>(() => {
     }
 })
 
-watchEffect(async () => {
-    console.info('Switch theme:', currentTheme.value);
-    const dark = isDark.value
-    const theme = currentTheme.value
+watch([currentTheme, isDark], async ([currentTheme, isDark]) => {
+    console.info('Switch theme:', currentTheme);
+    const dark = isDark
+    const theme = currentTheme
     let vscodeTheme = theme.vscodeTheme
     if (theme.isDark === 'auto') {
         darkmode.value = dark

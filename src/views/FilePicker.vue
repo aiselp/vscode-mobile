@@ -1,23 +1,23 @@
 <template>
-    <a-drawer v-model:open="open" class="custom-class" root-class-name="root-class-name" :root-style="{ color: 'blue' }"
+    <Drawer v-model:open="open" class="custom-class" root-class-name="root-class-name" :root-style="{ color: 'blue' }"
         style="color: red" title="选择文件" placement="right">
-        <a-directory-tree v-model:expandedKeys="expandedKeys" :load-data="onLoadData" v-model:selectedKeys="selectedKeys"
-            multiple :tree-data="treeData"></a-directory-tree>
+        <DirectoryTree v-model:expandedKeys="expandedKeys" :load-data="onLoadData" v-model:selectedKeys="selectedKeys"
+            multiple :tree-data="treeData"></DirectoryTree>
         <template #footer>
             <div class="button-go">
-                <a-button style="margin-right: 8px" @click="open = false">取消</a-button>
-                <a-button type="primary" @click="selectFile">确定</a-button>
+                <Button style="margin-right: 8px" @click="open = false">取消</Button>
+                <Button type="primary" @click="selectFile">确定</Button>
             </div>
         </template>
         <context-holder />
-    </a-drawer>
+    </Drawer>
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import * as vscode from 'vscode'
 import defaultFileSystem from '../core/features/filesystem'
 import type { TreeProps } from 'ant-design-vue';
-import { message } from 'ant-design-vue';
+import { message, Drawer, DirectoryTree, Button } from 'ant-design-vue';
 import { openNewFolder, openNewFile } from '../core/shortcutFunctions'
 import { FileType } from 'vscode';
 
