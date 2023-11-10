@@ -1,6 +1,6 @@
 <template >
     <ion-content>
-        <div style="display: flex;height: 100%;width: 100%;flex-direction: column;">
+        <div :style="style" style="display: flex;height: 100%;width: 100%;flex-direction: column;">
             <a-menu v-model:selectedKeys="current" mode="horizontal" :items="items" />
             <div style="display: flex;flex-grow: 1;;width: 100%;">
                 <div ref="activityBar" style="display: none;"></div>
@@ -13,13 +13,21 @@
 </template>
 <script setup lang="ts">
 import { IonContent, IonIcon } from '@ionic/vue';
-import { ref, onMounted, h, watch } from 'vue'
+import { ref, onMounted, h, watch, computed } from 'vue'
 import { folder, search, settings } from 'ionicons/icons';
 import { MenuProps } from 'ant-design-vue';
 import { renderSidebarPart, renderActivitybarPar } from '../core/setup'
 import SettingMenu from './SettingMenu.vue';
 import { openSearch, openExplorer } from '../core/shortcutFunctions'
+import { theme } from 'ant-design-vue';
 
+const { token } = theme.useToken()
+const style = computed(() => {
+    return {
+        "background-color": token.value.colorBgBase,
+        "color": token.value.colorText
+    }
+})
 
 const current = ref<string[]>(['file']);
 const sidebar = ref<HTMLElement>()

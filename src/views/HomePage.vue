@@ -27,6 +27,7 @@ import MenuPage from './MenuPage.vue';
 import BottomShortcuts from './BottomShortcuts.vue'
 import { IonContent, IonSplitPane, IonMenu, menuController } from '@ionic/vue';
 import { ref, onMounted, watch, computed } from 'vue'
+import { attachPart, Parts } from '@codingame/monaco-vscode-views-service-override'
 import { renderEditorPart, renderStatusBarPart } from '../core/setup'
 import { meunSate } from '../core/appConfigs'
 import { theme } from 'ant-design-vue';
@@ -35,6 +36,7 @@ const { token } = theme.useToken()
 const style = computed(() => {
   return {
     "background-color": token.value.colorBgBase,
+    "color": token.value.colorText
   }
 })
 
@@ -43,8 +45,9 @@ const editors = ref<HTMLElement>()
 const panel = ref<HTMLElement>()
 const statusBar = ref<HTMLElement>()
 onMounted(() => {
-  renderEditorPart(editors.value!!)
   // renderStatusBarPart(statusBar.value!!)
+  renderEditorPart(editors.value!!)
+  attachPart(Parts.STATUSBAR_PART, statusBar.value!!)
   //监听菜单状态
   watch(meunSate, async (v) => {
     if (v) {
@@ -61,7 +64,10 @@ onMounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
+}
 
+#container :deep(a) {
+  color: inherit;
 }
 
 #sidebar {

@@ -58,6 +58,7 @@
     "@codingame/monaco-vscode-theme-seti-default-extension": "^1.83.5",
     "@codingame/monaco-vscode-typescript-basics-default-extension": "^1.83.5",
     "@codingame/monaco-vscode-typescript-language-features-default-extension": "^1.83.5",
+    "@codingame/monaco-vscode-view-status-bar-service-override": "^1.83.5",
     "@codingame/monaco-vscode-views-service-override": "^1.83.5",
     "@codingame/monaco-vscode-xml-default-extension": "^1.83.5",
     "@ionic/storage": "^4.0.0",

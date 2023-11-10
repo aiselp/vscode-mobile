@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import '@codingame/monaco-vscode-language-pack-zh-hans'
+import './core/app'
 import App from './App.vue'
 import router from './router';
 import Antd from 'ant-design-vue';
@@ -25,7 +25,6 @@ import '@ionic/vue/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
-import './core/app'
 import './core/styles/vscode-style-override.css'
 
 

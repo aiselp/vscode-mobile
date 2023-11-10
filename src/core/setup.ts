@@ -10,11 +10,11 @@ import getThemeServiceOverride from '@codingame/monaco-vscode-theme-service-over
 import getLanguagesServiceOverride from '@codingame/monaco-vscode-languages-service-override'
 import getAudioCueServiceOverride from '@codingame/monaco-vscode-audio-cue-service-override'
 import getViewsServiceOverride, {
-    isEditorPartVisible, Parts,
-    onPartVisibilityChange, renderEditorPart, renderActivitybarPar, renderSidebarPart, renderStatusBarPart, renderPanelPart,
-    isPartVisibile, attachPart
+    isEditorPartVisible, Parts, onPartVisibilityChange, renderEditorPart,
+    renderActivitybarPar, renderSidebarPart, renderStatusBarPart, renderPanelPart,
 } from '@codingame/monaco-vscode-views-service-override'
 import getDebugServiceOverride from '@codingame/monaco-vscode-debug-service-override'
+import getStatusBarServiceOverride from '@codingame/monaco-vscode-view-status-bar-service-override'
 import getPreferencesServiceOverride from '@codingame/monaco-vscode-preferences-service-override'
 import getSnippetServiceOverride from '@codingame/monaco-vscode-snippets-service-override'
 import getQuickAccessServiceOverride from '@codingame/monaco-vscode-quickaccess-service-override'
@@ -55,6 +55,7 @@ window.MonacoEnvironment = {
 
 // Override services
 await initializeMonacoService({
+    ...getStatusBarServiceOverride(),
     ...getExtensionServiceOverride(toWorkerConfig(ExtensionHostWorker)),
     ...getModelServiceOverride(),
     ...getNotificationServiceOverride(),
@@ -71,7 +72,7 @@ await initializeMonacoService({
     ...getSnippetServiceOverride(),
     ...getQuickAccessServiceOverride({
         isKeybindingConfigurationVisible: isEditorPartVisible,
-        shouldUseGlobalPicker: isEditorPartVisible
+        shouldUseGlobalPicker: (_editor, isStandalone) => !isStandalone && isEditorPartVisible()
     }),
     ...getOutputServiceOverride(),
     //   ...getTerminalServiceOverride(new TerminalBackend()),

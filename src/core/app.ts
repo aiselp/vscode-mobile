@@ -1,4 +1,5 @@
 
+import '@codingame/monaco-vscode-language-pack-zh-hans'
 import * as monaco from 'monaco-editor'
 import * as vscode from 'vscode'
 // import 'monaco-editor/esm/vs/editor/editor.all.js'
@@ -38,7 +39,6 @@ import { keyboard } from './native/native_status'
 import { getNativeApp } from './native'
 import { ViewColumn, WorkspaceFolderPickOptions } from 'vscode'
 import { updateUserConfiguration, getUserConfiguration } from '@codingame/monaco-vscode-configuration-service-override'
-import { watchTheme } from '../theme'
 
 const isDev = import.meta.env.DEV;
 
@@ -99,4 +99,3 @@ export async function checkDocument(message: string) {
     })
   }
 }
-watchTheme(getUserConfiguration, updateUserConfiguration)
