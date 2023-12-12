@@ -4,14 +4,21 @@ import * as autox from './autox'
 import { IBaseApp } from './native_interface';
 
 
-export async function getNativeApp(): Promise<IBaseApp | null> {
-    if (await capacitor.isSupported()) {
-        return capacitor.getCapacitorApp()
-    }
-    if (await autox.isSupported()) {
-        return autox.getAutoxApp()
+const nativeApp = (async () => {
+    try {
+        if (await capacitor.isSupported()) {
+            return capacitor.getCapacitorApp()
+        }
+        if (await autox.isSupported()) {
+            return autox.getAutoxApp()
+        }
+    } catch (e) {
+        return null
     }
     return null
+})()
+export async function getNativeApp(): Promise<IBaseApp | null> {
+    return await nativeApp
 }
 
 getNativeApp().then((native) => {

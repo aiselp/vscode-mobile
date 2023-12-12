@@ -30,7 +30,7 @@
                     </Menu>
                 </template>
             </Dropdown>
-            <Button @click="start" :size="size" class="dbutton" :icon="h(IonIcon, { icon: play })">
+            <Button @click="start" :size="size" class="dbutton" :loading="codeRunning" :icon="h(IonIcon, { icon: play })">
                 <span>运行</span></Button>
             <Button :size="size" class="dbutton" :icon="h(IonIcon, { icon: arrowUndo })"
                 @click="undo"><span>撤销</span></Button>
@@ -70,6 +70,7 @@ import FilePicker from "./FilePicker.vue";
 import { FileType } from "vscode";
 import * as monaco from "monaco-editor";
 import { prettierFormat, enable } from "@/core/tools/prettier";
+import { getNativeApp } from "../core/native"
 
 const style = computed(() => {
     return {
@@ -78,6 +79,7 @@ const style = computed(() => {
     };
 });
 
+const codeRunning = ref(false)
 const fileType = ref<FileType>(FileType.Directory);
 const filePickerOpen = ref<boolean>(false);
 const foldAll = ref<boolean>(false);
@@ -113,16 +115,19 @@ const onEditMenuClick: MenuProps["onClick"] = async ({ key }) => {
     console.log(`Click on item ${key}`);
 };
 async function start() {
-    console.log("autox:", (window as any).$autox);
-    console.log(monaco.editor.getEditors());
-    console.log(vscode.window.activeTextEditor);
-    // const commands = vscode.commands.getCommands();
-    // commands.then((allCommands: string[]) => {
-    //     allCommands.forEach((command) => {
-    //         console.log(command);
-    //     });
-    // });
-    message.error("暂不支持！");
+    if (codeRunning.value) return
+    const nativeApp = await getNativeApp()
+    if (nativeApp?.runCode) {
+        const document = vscode.window.activeTextEditor?.document
+        if (document) {
+            codeRunning.value = true
+            nativeApp.runCode(document).catch((e: Error) => {
+                message.error(e.message);
+            }).finally(() => { codeRunning.value = false })
+        } else message.error("请打开文件后运行！");
+        return
+    }
+    message.error("没有接口！");
 }
 function openFolder() {
     fileType.value = FileType.Directory;

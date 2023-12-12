@@ -1,4 +1,4 @@
-import { FileSystemProvider, EventEmitter } from "vscode";
+import { FileSystemProvider, TextDocument } from "vscode";
 import { Ref } from "vue";
 
 export interface IBaseApp {
@@ -9,4 +9,5 @@ export interface IBaseApp {
         priority: number,
         handler: (processNextHandler: () => void) => void
     ): void
+    runCode?: (doc: TextDocument) => Promise<void>
 }
