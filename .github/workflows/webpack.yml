@@ -27,7 +27,10 @@ jobs:
           npm install
           npm run build
       - uses: actions/upload-artifact@v3
+<<<<<<< HEAD
         if: matrix.node-version == '20.x'
+=======
+>>>>>>> main
         with:
           name: dist
           path: dist/
@@ -59,15 +62,27 @@ jobs:
           path: dist/
       - name: sync
         run: |
+<<<<<<< HEAD
           ls dist/
           npx cap sync
           npx cap copy
       - name: buid-android
         run: |
           cd android
+=======
+          npx cap sync
+          npx cap copy
+          cd android
+      - name: buid-android
+        run: |
+>>>>>>> main
           chmod +x ./gradlew
           ./gradlew app:assemble
       - uses: actions/upload-artifact@v3
         with:
           name: apks
+<<<<<<< HEAD
           path: android/app/build/outputs/apk/release/*
+=======
+          path: app/build/outputs/apk/release/*
+>>>>>>> main
